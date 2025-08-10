@@ -10,6 +10,18 @@
     flex: 1;
 }
 
+.navLogo{
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    gap: 8px;
+    margin-right: auto;
+
+    transition: all 400ms;
+
+    will-change: transform;
+}
+
 .navCenter {
     flex: 2;
     text-align: center;
