@@ -1,0 +1,24 @@
+.navbar-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.navLeft {
+    flex: 1;
+}
+
+.navCenter {
+    flex: 2;
+    text-align: center;
+}
+
+.links {
+    display: flex;
+    gap: 48px;
+    margin-left: auto;
+    /* Vertical centering offset for animated underline */
+    transform: translateY(2px);
+}
