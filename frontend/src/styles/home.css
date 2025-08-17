@@ -30,6 +30,16 @@
   display: block;
 }
 
+.search-title {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  text-align: center;
+  z-index: 1;
+}
+
 .search-bar {
   position: sticky;
   top: 40%;
@@ -62,10 +72,15 @@
   margin-right: 10px;
 }
 
+/** Restaurant Section Styles */
+.restaurant-section {
+  margin-top: 5vh;
+}
+
 /* Cuisine Section Styles */
 .cuisine-section {
   position: relative;
-  margin-top: 10vh;
+  margin-top: 5vh;
 }
 
 .cuisine-list {
