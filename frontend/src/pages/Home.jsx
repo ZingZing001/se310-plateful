@@ -1,8 +1,18 @@
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import "../styles/home.css";
 import "../styles/global.css";
+import navLogo from "../assets/navlogo.png";
 
 export default function Home() {
+  const cuisines = [
+    { name: "Chinese", image: navLogo }, // TO DO - replace with actual images
+    { name: "Japanese", image: navLogo },
+    { name: "Italian", image: navLogo },
+    { name: "Mexican", image: navLogo },
+    { name: "Indian", image: navLogo },
+    { name: "Thai", image: navLogo },
+  ];
+
   return (
     <div>
       <section className="search-wrapper">
@@ -20,10 +30,16 @@ export default function Home() {
       <section className="cuisine-section">
         <h2>Explore Cuisines</h2>
         <div className="cuisine-list">
-          <div className="cuisine-item">Italian</div>
-          <div className="cuisine-item">Chinese</div>
-          <div className="cuisine-item">Mexican</div>
-          <div className="cuisine-item">Indian</div>
+          {cuisines.map((cuisine) => (
+            <div key={cuisine.name} className="cuisine-item">
+              <img
+                src={cuisine.image}
+                alt={cuisine.name}
+                className="cuisine-image"
+              />
+              <div className="cuisine-label">{cuisine.name}</div>
+            </div>
+          ))}
         </div>
       </section>
     </div>
