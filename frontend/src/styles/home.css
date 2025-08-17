@@ -1,12 +1,42 @@
 .search-wrapper {
-  position: fixed;
+  position: absolute;
   width: 100%;
   left: 0;
 }
 
 .full-width-image {
   width: 100%;
-  height: 70vh;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
+}
+
+.search-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  width: 55%;
+}
+
+.search-bar input {
+  border: none;
+  padding: 0.5rem;
+  outline: none;
+}
+
+.search-bar button {
+  border: none;
+  background: #333;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  margin-right: 10px;
 }

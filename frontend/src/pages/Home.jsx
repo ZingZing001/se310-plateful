@@ -10,6 +10,10 @@ export default function Home() {
           alt="Background"
           className="full-width-image"
         />
+        <div className="search-bar">
+          <input type="text" placeholder="Search..." />
+          <button>Go</button>
+        </div>
       </section>
     </div>
   );
