@@ -1,27 +1,21 @@
 /* Search Bar and Background Styles*/
 .search-wrapper {
   min-height: 40vh;
-  height: auto;
   margin: 0;
   padding: 0;
-  width: 100vw;
+  width: 100%;
   left: 0;
+  position: relative;
 }
 
 .background-image {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  margin-top: 70px; /* Adjust for navbar height */
-}
-
-.background-image {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
+  z-index: 0;
 }
 
 .full-width-image {
@@ -32,17 +26,16 @@
 
 .search-title {
   position: absolute;
-  top: 25%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 2rem;
   text-align: center;
-  z-index: 1;
 }
 
 .search-bar {
-  position: sticky;
-  top: 40%;
+  position: absolute;
+  top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -75,6 +68,7 @@
 /** Restaurant Section Styles */
 .restaurant-section {
   margin-top: 5vh;
+  padding-top: 2rem;
 }
 
 /* Cuisine Section Styles */

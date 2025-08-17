@@ -14,6 +14,8 @@ export default function Home() {
     { name: "Thai", image: navLogo },
   ];
 
+  // Sample restaurant data
+  // TO DO - replace with actual data from API or database
   const restaurants = [
     {
       name: "Sushi World",
@@ -86,6 +88,11 @@ export default function Home() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="restaurant-section">
+        <h3>Local Favourites</h3>
+        <RestaurantList restaurants={restaurants} />
       </section>
     </div>
   );
