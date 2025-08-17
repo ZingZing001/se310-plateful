@@ -9,14 +9,14 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </Layout>
-    </Router>
+    <Layout>
+      <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+      </Router>
+    </Layout>
   );
 }
 
