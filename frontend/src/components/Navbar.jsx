@@ -9,11 +9,11 @@ const NavBar = () => {
           <img src={navLogo} alt="Logo" />
         </a>
       </div>
-      
+
       <div className="nav-center">
         <a href="/location">Location</a>
       </div>
-      
+
       <div className="nav-right">
         <a href="/about">About</a>
         <a href="/search">Search</a>
