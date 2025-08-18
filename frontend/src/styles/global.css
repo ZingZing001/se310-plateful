@@ -15,23 +15,23 @@ a:active {
 }
 
 :root {
-  --Plateful-Green-Primary: #7B9300;
-  --Plateful-Blue-Primary: #8272FF;
-  --Plateful-Red-Primary: #FF4E02;
-  --Plateful-Yellow-Primary: #FFCC02;
+  --Plateful-Green-Primary: #7b9300;
+  --Plateful-Blue-Primary: #8272ff;
+  --Plateful-Red-Primary: #ff4e02;
+  --Plateful-Yellow-Primary: #ffcc02;
 
   /* Shades and tints (TO IMPROVE) */
   --Plateful-Green-Dark: #142601;
-  --Plateful-Green-Medium: #7B9300;
-  --Plateful-Green-Light: #9CD400;
-  --Plateful-Green-Lightest: #D8FF99;
-  --Plateful-Blue-Dark: #001BE5;
-  --Plateful-Blue-Darkest: #0015B0;
-  --Plateful-Blue-Light: #5953FF;
-  --Plateful-Red-Dark: #C02A01;
-  --Plateful-Red-Light: #FFCAB7;
-  --Plateful-Yellow-Dark: #FF6D01;
-  --Plateful-Yellow-Light: #FFEDB0;
+  --Plateful-Green-Medium: #7b9300;
+  --Plateful-Green-Light: #9cd400;
+  --Plateful-Green-Lightest: #d8ff99;
+  --Plateful-Blue-Dark: #001be5;
+  --Plateful-Blue-Darkest: #0015b0;
+  --Plateful-Blue-Light: #5953ff;
+  --Plateful-Red-Dark: #c02a01;
+  --Plateful-Red-Light: #ffcab7;
+  --Plateful-Yellow-Dark: #ff6d01;
+  --Plateful-Yellow-Light: #ffedb0;
 
   /* General text colors */
   --text-dark: #292d2a;
@@ -109,6 +109,11 @@ h5 {
 
 .spacer-small {
   padding: 24px 0;
+}
+
+section {
+  margin: 0 auto;
+  width: clamp(300px, 75%, 1300px);
 }
 
 .img-logo {
