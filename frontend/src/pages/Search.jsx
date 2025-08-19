@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
-import "../styles/home.css";
+import "../styles/search.css";
 import "../styles/global.css";
 import navLogo from "../assets/navlogo.png";
 import RestaurantList from "../components/RestaurantList";
@@ -42,15 +42,6 @@ export default function Home() {
     setMap(map);
     return () => map.remove();
   }, []);
-
-  const cuisines = [
-    { name: "Chinese", image: navLogo }, // TO DO - replace with actual images
-    { name: "Japanese", image: navLogo },
-    { name: "Italian", image: navLogo },
-    { name: "Mexican", image: navLogo },
-    { name: "Indian", image: navLogo },
-    { name: "Thai", image: navLogo },
-  ];
 
   // Sample restaurant data
   // TO DO - replace with actual data from API or database
@@ -107,40 +98,19 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="restaurant-section">
-        <h3>Popular Restaurants</h3>
-        <RestaurantList restaurants={restaurants} />
-      </section>
-
-      <section className="cuisine-section">
-        <h3>Explore Cuisines</h3>
-        <div className="cuisine-list">
-          {cuisines.map((cuisine) => (
-            <div key={cuisine.name} className="cuisine-item">
-              <img
-                src={cuisine.image}
-                alt={cuisine.name}
-                className="cuisine-image"
-              />
-              <div className="cuisine-label">{cuisine.name}</div>
-            </div>
-          ))}
+      <section className="results-container">
+        <div className="restaurant-list">
+          <RestaurantList restaurants={restaurants} direction={"vertical"} />
         </div>
-      </section>
-
-      <section className="restaurant-section">
-        <h3>Local Favourites</h3>
-        <RestaurantList restaurants={restaurants} />
-      </section>
-
-      <section className="map-section">
-        <div ref={mapElement} className="mapDiv">
-          <input
-            type="text"
-            name="longitude"
-            value={mapLongitude}
-            onChange={(e) => setMapLongitude(e.target.value)}
-          />
+        <div className="map-container">
+          <div ref={mapElement} className="mapDiv">
+            <input
+              type="text"
+              name="longitude"
+              value={mapLongitude}
+              onChange={(e) => setMapLongitude(e.target.value)}
+            />
+          </div>
         </div>
       </section>
     </div>

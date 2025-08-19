@@ -106,9 +106,10 @@
   font-size: 1rem;
 }
 
+/** Map Styles */
 .mapDiv {
   width: 100%;
-  height: 400px; /* or whatever size you want */
+  height: 400px;
   margin-top: 20px;
   border-radius: 8px;
   overflow: hidden;
