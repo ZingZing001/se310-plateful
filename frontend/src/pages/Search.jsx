@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
+import RestaurantList from "../components/RestaurantList";
 import "../styles/search.css";
 import "../styles/global.css";
-import navLogo from "../assets/navlogo.png";
-import RestaurantList from "../components/RestaurantList";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
 import tt from "@tomtom-international/web-sdk-maps";
 
