@@ -114,6 +114,7 @@ h5 {
 section {
   margin: 0 auto;
   width: clamp(300px, 75%, 1300px);
+  padding-bottom: 24px;
 }
 
 .img-logo {
