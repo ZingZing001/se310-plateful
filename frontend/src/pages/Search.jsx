@@ -12,7 +12,57 @@ export default function Home() {
   const [mapLongitude, setMapLongitude] = useState(174.763336);
   const [mapLatitude, setMapLatitude] = useState(-36.848461);
   const [mapZoom, setMapZoom] = useState(13);
-  const [map, setMap] = useState({});
+  const [map, setMap] = useState(null);
+
+  // Sample restaurant data
+  // TO DO - replace with actual data from API or database
+  const restaurants = [
+    {
+      name: "Sushi World",
+      description: "Fresh sushi rolls and sashimi prepared daily.",
+      rating: 4.7,
+      latitude: -36.8485,
+      longitude: 174.7633,
+      image:
+        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
+    },
+    {
+      name: "Pasta Palace",
+      description: "Authentic Italian pasta with homemade sauces.",
+      rating: 4.5,
+      latitude: -36.8509,
+      longitude: 174.7655,
+      image:
+        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
+    },
+    {
+      name: "Burger Haven",
+      description: "Juicy burgers with all the fixings you can imagine.",
+      rating: 4.3,
+      latitude: -36.8474,
+      longitude: 174.7661,
+      image:
+        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
+    },
+    {
+      name: "Taco Fiesta",
+      description: "Mexican street-style tacos with bold flavors.",
+      rating: 4.6,
+      latitude: -36.8496,
+      longitude: 174.7621,
+      image:
+        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
+    },
+    {
+      name: "Curry House",
+      description: "Spicy and savory curries inspired by India.",
+      rating: 4.4,
+      latitude: -36.8521,
+      longitude: 174.7682,
+      image:
+        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
+    },
+  ];
 
   const increaseZoom = () => {
     if (mapZoom < MAX_ZOOM) {
@@ -42,45 +92,24 @@ export default function Home() {
     return () => map.remove();
   }, []);
 
-  // Sample restaurant data
-  // TO DO - replace with actual data from API or database
-  const restaurants = [
-    {
-      name: "Sushi World",
-      description: "Fresh sushi rolls and sashimi prepared daily.",
-      rating: 4.7,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Pasta Palace",
-      description: "Authentic Italian pasta with homemade sauces.",
-      rating: 4.5,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Burger Haven",
-      description: "Juicy burgers with all the fixings you can imagine.",
-      rating: 4.3,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Taco Fiesta",
-      description: "Mexican street-style tacos with bold flavors.",
-      rating: 4.6,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Curry House",
-      description: "Spicy and savory curries inspired by India.",
-      rating: 4.4,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-  ];
+  useEffect(() => {
+    if (!map) return;
+
+    restaurants.forEach((r) => {
+      const element = document.createElement("div");
+      element.className = "custom-marker";
+      element.innerHTML = `<img src="${r.image}" style="width:30px;height:30px;border-radius:50%;" />`;
+
+      const popup = new tt.Popup({ offset: 30 }).setHTML(
+        `<h3>${r.name}</h3><p>${r.description}</p><p>Rating: ${r.rating}</p>`
+      );
+
+      new tt.Marker({ element })
+        .setLngLat([r.longitude, r.latitude])
+        .setPopup(popup)
+        .addTo(map);
+    });
+  }, [map]);
 
   return (
     <div>
