@@ -105,3 +105,11 @@
   font-weight: bold;
   font-size: 1rem;
 }
+
+.mapDiv {
+  width: 100%;
+  height: 400px; /* or whatever size you want */
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}

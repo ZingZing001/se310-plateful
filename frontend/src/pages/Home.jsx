@@ -1,10 +1,48 @@
+import { useState, useRef, useEffect } from "react";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import "../styles/home.css";
 import "../styles/global.css";
 import navLogo from "../assets/navlogo.png";
 import RestaurantList from "../components/RestaurantList";
+import "@tomtom-international/web-sdk-maps/dist/maps.css";
+import tt from "@tomtom-international/web-sdk-maps";
 
 export default function Home() {
+  const mapElement = useRef(null);
+
+  const [mapLongitude, setMapLongitude] = useState(-121.91599);
+  const [mapLatitude, setMapLatitude] = useState(37.36765);
+  const [mapZoom, setMapZoom] = useState(13);
+  const [map, setMap] = useState({});
+
+  const increaseZoom = () => {
+    if (mapZoom < MAX_ZOOM) {
+      setMapZoom(mapZoom + 1);
+    }
+  };
+
+  const decreaseZoom = () => {
+    if (mapZoom > 1) {
+      setMapZoom(mapZoom - 1);
+    }
+  };
+
+  const updateMap = () => {
+    map.setCenter([parseFloat(mapLongitude), parseFloat(mapLatitude)]);
+    map.setZoom(mapZoom);
+  };
+
+  useEffect(() => {
+    let map = tt.map({
+      key: "agzx9wsQdqX7CENP7gN1KQWwEe7V9c37",
+      container: mapElement.current,
+      center: [mapLongitude, mapLatitude],
+      zoom: mapZoom,
+    });
+    setMap(map);
+    return () => map.remove();
+  }, []);
+
   const cuisines = [
     { name: "Chinese", image: navLogo }, // TO DO - replace with actual images
     { name: "Japanese", image: navLogo },
@@ -72,6 +110,17 @@ export default function Home() {
       <section className="restaurant-section">
         <h3>Popular Restaurants</h3>
         <RestaurantList restaurants={restaurants} />
+      </section>
+
+      <section className="map-section">
+        <div ref={mapElement} className="mapDiv">
+          <input
+            type="text"
+            name="longitude"
+            value={mapLongitude}
+            onChange={(e) => setMapLongitude(e.target.value)}
+          />
+        </div>
       </section>
 
       <section className="cuisine-section">
