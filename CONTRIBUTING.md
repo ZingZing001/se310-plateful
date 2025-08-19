@@ -70,17 +70,17 @@ We follow the **Fork & Pull Request** model:
 
 ## Code Review Process
 
-**Important:**
-
-- Every PR must be reviewed by at least one other team member before merging.
-- Do not merge your own pull request without approval.
-
 Reviewers will:
 
 1. Run the test suite and the application.
 2. Check code readability, maintainability, and adherence to style.
 3. Verify that commits are squashed and conflicts resolved.
 4. Only merge once approval is granted.
+
+**Important:**
+
+- Every PR must be reviewed by at least one other team member before merging.
+- Do not merge your own pull request without approval.
 
 **Note:**
 
@@ -116,7 +116,7 @@ To keep our history clean and consistent, all branches must follow the pattern:
 
 All issues are encouraged to follow a consistent naming pattern:
 
-<Action> <Feature/Component> (<Scope>)
+`[Action] [Feature/Component] ([Scope])`
 
 **Action examples:** Add, Create, Implement, Update, Fix, Refactor, Remove.  
 **Feature/Component:** The specific functionality, page, or file being worked on.  
