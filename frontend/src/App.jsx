@@ -7,15 +7,15 @@ import Search from "./pages/Search";
 
 function App() {
   return (
-    <Layout>
-      <Router>
+    <Router>
+      <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
         </Routes>
-      </Router>
-    </Layout>
+      </Layout>
+    </Router>
   );
 }
 
