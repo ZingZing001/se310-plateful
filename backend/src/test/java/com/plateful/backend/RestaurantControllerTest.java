@@ -55,4 +55,24 @@ class RestaurantControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("One Restaurant"));
     }
+
+    @Test
+    void getCuisines_returnsDistinctCuisines() throws Exception {
+        Restaurant r1 = new Restaurant();
+        r1.setCuisine("Italian");
+        Restaurant r2 = new Restaurant();
+        r2.setCuisine("Chinese");
+        Restaurant r3 = new Restaurant();
+        r3.setCuisine("Italian"); // Duplicate to test distinct functionality
+
+        when(repo.findAllCuisines()).thenReturn(List.of(r1, r2, r3));
+
+        mockMvc.perform(get("/api/restaurants/cuisines"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/json"))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").value("Chinese")) // Should be sorted
+                .andExpect(jsonPath("$[1]").value("Italian"))
+                .andExpect(jsonPath("$.length()").value(2)); // Should be distinct
+    }
 }
