@@ -15,7 +15,9 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
       />
       <div className="flex flex-col p-3 flex-grow">
         <h3 className="text-lg font-bold truncate">{restaurant.name}</h3>
-        <p className="text-gray-600 text-sm line-clamp-3">{restaurant.description}</p>
+        <p className="text-gray-600 text-sm line-clamp-3">
+          {restaurant.description}
+        </p>
         <p className="text-sm text-gray-500 mt-auto">
           ⭐ Rating: {restaurant.rating}
         </p>

@@ -9,6 +9,19 @@
     padding: 0;
     box-sizing: border-box;
   }
+
+  body {
+    font-family: "Overpass", sans-serif;
+    line-height: 1.5;
+    color: #292d2a;
+  }
+}
+
+:root {
+  --Plateful-Green-Primary: #7b9300;
+  --Plateful-Blue-Primary: #8272ff;
+  --Plateful-Red-Primary: #ff4e02;
+  --Plateful-Yellow-Primary: #ffcc02;
 }
 
 /* a {
