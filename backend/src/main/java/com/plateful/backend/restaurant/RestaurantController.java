@@ -21,4 +21,13 @@ public class RestaurantController {
   public Restaurant get(@PathVariable String id) {
     return repo.findById(id).orElseThrow(() -> new RuntimeException("Not found: " + id));
   }
+
+  @GetMapping("/search")
+  public List<Restaurant> search(@RequestParam String query) {
+    if (query == null || query.trim().isEmpty()) {
+      return repo.findAll();
+    }
+    return repo.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCuisineContainingIgnoreCase(
+        query, query, query);
+  }
 }

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import RestaurantList from "../components/RestaurantList";
 import "../styles/search.css";
@@ -6,63 +7,68 @@ import "../styles/global.css";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
 import tt from "@tomtom-international/web-sdk-maps";
 
-export default function Home() {
+export default function Search() {
   const mapElement = useRef(null);
+  const [searchParams] = useSearchParams();
 
   const [mapLongitude, setMapLongitude] = useState(174.763336);
   const [mapLatitude, setMapLatitude] = useState(-36.848461);
   const [mapZoom, setMapZoom] = useState(13);
   const [map, setMap] = useState(null);
 
-  // Sample restaurant data
-  // TO DO - replace with actual data from API or database
-  const restaurants = [
-    {
-      name: "Sushi World",
-      description: "Fresh sushi rolls and sashimi prepared daily.",
-      rating: 4.7,
-      latitude: -36.8485,
-      longitude: 174.7633,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Pasta Palace",
-      description: "Authentic Italian pasta with homemade sauces.",
-      rating: 4.5,
-      latitude: -36.8509,
-      longitude: 174.7655,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Burger Haven",
-      description: "Juicy burgers with all the fixings you can imagine.",
-      rating: 4.3,
-      latitude: -36.8474,
-      longitude: 174.7661,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Taco Fiesta",
-      description: "Mexican street-style tacos with bold flavors.",
-      rating: 4.6,
-      latitude: -36.8496,
-      longitude: 174.7621,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Curry House",
-      description: "Spicy and savory curries inspired by India.",
-      rating: 4.4,
-      latitude: -36.8521,
-      longitude: 174.7682,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-  ];
+  const [restaurants, setRestaurants] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const MAX_ZOOM = 18;
+
+  // Function to fetch restaurants based on search query
+  const fetchRestaurants = async (query = "") => {
+    try {
+      setLoading(true);
+      setError("");
+      
+      const url = query.trim() 
+        ? `http://localhost:8080/api/restaurants/search?query=${encodeURIComponent(query)}`
+        : `http://localhost:8080/api/restaurants`;
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setRestaurants(data);
+    } catch (err) {
+      console.error('Fetch error:', err);
+      setError('Failed to fetch restaurants: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle search from the search bar on this page
+  const handleSearch = () => {
+    fetchRestaurants(searchQuery);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  // Load initial data when component mounts or search params change
+  useEffect(() => {
+    const queryFromUrl = searchParams.get('query');
+    if (queryFromUrl) {
+      setSearchQuery(queryFromUrl);
+      fetchRestaurants(queryFromUrl);
+    } else {
+      fetchRestaurants(); // Load all restaurants if no query
+    }
+  }, [searchParams]);
 
   const increaseZoom = () => {
     if (mapZoom < MAX_ZOOM) {
@@ -93,23 +99,39 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!map) return;
+    if (!map || !restaurants.length) return;
+
+    // Clear existing markers
+    const markers = document.querySelectorAll('.custom-marker');
+    markers.forEach(marker => marker.remove());
 
     restaurants.forEach((r) => {
+      // Use location from MongoDB data
+      const longitude = r.location?.coordinates?.[0] || r.longitude;
+      const latitude = r.location?.coordinates?.[1] || r.latitude;
+      
+      if (!longitude || !latitude) return;
+
       const element = document.createElement("div");
       element.className = "custom-marker";
-      element.innerHTML = `<img src="${r.image}" style="width:30px;height:30px;border-radius:50%;" />`;
+      
+      // Use restaurant image if available, otherwise use a default
+      const imageUrl = r.images?.[0] || "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
+      element.innerHTML = `<img src="${imageUrl}" style="width:30px;height:30px;border-radius:50%;" />`;
 
       const popup = new tt.Popup({ offset: 30 }).setHTML(
-        `<h3>${r.name}</h3><p>${r.description}</p><p>Rating: ${r.rating}</p>`
+        `<h3>${r.name}</h3>
+         <p>${r.description}</p>
+         <p><strong>Cuisine:</strong> ${r.cuisine}</p>
+         <p><strong>Price Level:</strong> ${'$'.repeat(r.priceLevel || 1)}</p>`
       );
 
       new tt.Marker({ element })
-        .setLngLat([r.longitude, r.latitude])
+        .setLngLat([longitude, latitude])
         .setPopup(popup)
         .addTo(map);
     });
-  }, [map]);
+  }, [map, restaurants]);
 
   return (
     <div>
@@ -121,14 +143,36 @@ export default function Home() {
         />
         <h1 className="search-title">Looking for something to eat?</h1>
         <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-          <button>Go</button>
+          <input 
+            type="text" 
+            placeholder="Search..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+          />
+          <button onClick={handleSearch} disabled={loading}>
+            {loading ? 'Searching...' : 'Go'}
+          </button>
         </div>
+        {error && (
+          <div className="error-message" style={{color: 'red', textAlign: 'center', marginTop: '10px'}}>
+            Error: {error}
+          </div>
+        )}
       </section>
 
       <section className="results-container">
         <div className="restaurant-list">
-          <RestaurantList restaurants={restaurants} direction={"vertical"} />
+          {loading ? (
+            <div style={{textAlign: 'center', padding: '20px'}}>Loading restaurants...</div>
+          ) : restaurants.length > 0 ? (
+            <RestaurantList restaurants={restaurants} direction={"vertical"} />
+          ) : (
+            <div style={{textAlign: 'center', padding: '20px'}}>
+              {searchQuery ? 'No restaurants found for your search.' : 'No restaurants available.'}
+            </div>
+          )}
         </div>
         <div className="map-container">
           <div ref={mapElement} className="mapDiv">
