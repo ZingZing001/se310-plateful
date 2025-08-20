@@ -2,10 +2,11 @@ package com.plateful.backend.restaurant;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/restaurants")
-@CrossOrigin(origins = {"http://localhost:5173"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"})
 public class RestaurantController {
 
   private final RestaurantRepository repo;
@@ -29,5 +30,16 @@ public class RestaurantController {
     }
     return repo.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrCuisineContainingIgnoreCase(
         query, query, query);
+  }
+
+  @GetMapping("/cuisines")
+  public List<String> getCuisines() {
+    return repo.findAllCuisines()
+        .stream()
+        .map(Restaurant::getCuisine)
+        .filter(cuisine -> cuisine != null && !cuisine.trim().isEmpty())
+        .distinct()
+        .sorted()
+        .collect(Collectors.toList());
   }
 }
