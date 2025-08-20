@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import "../styles/home.css";
 import "../styles/global.css";
@@ -9,6 +10,7 @@ import tt from "@tomtom-international/web-sdk-maps";
 
 export default function Home() {
   const mapElement = useRef(null);
+  const navigate = useNavigate();
 
   const [mapLongitude, setMapLongitude] = useState(174.763336);
   const [mapLatitude, setMapLatitude] = useState(-36.848461);
@@ -18,6 +20,7 @@ export default function Home() {
   const [restaurantsRaw, setRestaurantsRaw] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const MAX_ZOOM = 18;
 
@@ -50,6 +53,32 @@ export default function Home() {
   const updateMap = () => {
     map.setCenter([parseFloat(mapLongitude), parseFloat(mapLatitude)]);
     map.setZoom(mapZoom);
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      return;
+    }
+
+    try {
+      // Perform the search and navigate to search page with results
+      const response = await fetch(`http://localhost:8080/api/restaurants/search?query=${encodeURIComponent(searchQuery)}`);
+      if (response.ok) {
+        const searchResults = await response.json();
+        // Navigate to search page with query parameter
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      } else {
+        console.error('Search failed:', response.status);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   useEffect(() => {
@@ -103,8 +132,14 @@ export default function Home() {
         />
         <h1 className="search-title">Looking for something to eat?</h1>
         <div className="search-bar">
-          <input type="text" placeholder="Search..." />
-          <button>Go</button>
+          <input 
+            type="text" 
+            placeholder="Search..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <button onClick={handleSearch}>Go</button>
         </div>
       </section>
 
