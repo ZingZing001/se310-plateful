@@ -1,26 +1,22 @@
 import "../styles/global.css";
-const RestaurantCard = ({ restaurant, key, direction }) => {
+const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
   return (
     <div
-      className={`restaurant-card ${key} ${
+      className={`restaurant-card ${
         direction === "vertical"
-          ? "flex flex-row items-start gap-4 p-4 rounded-lg shadow-lg bg-white"
-          : "flex flex-col items-center gap-2 p-2 rounded-md shadow-lg bg-white"
+          ? "w-64 h-80 flex flex-col rounded-lg shadow-lg bg-white overflow-hidden"
+          : "w-64 h-80 flex flex-col rounded-lg shadow-lg bg-white overflow-hidden"
       }`}
     >
       <img
         src={restaurant.image}
         alt={restaurant.name}
-        className={
-          direction === "vertical"
-            ? "w-32 h-32 object-cover rounded-md flex-shrink-0"
-            : "w-full h-48 object-cover rounded-md"
-        }
+        className="w-full h-40 object-cover rounded-t-lg"
       />
-      <div className="flex flex-col justify-center">
-        <h3 className="text-lg font-bold">{restaurant.name}</h3>
-        <p className="text-gray-600">{restaurant.description}</p>
-        <p className="text-sm text-gray-500 mt-2">
+      <div className="flex flex-col p-3 flex-grow">
+        <h3 className="text-lg font-bold truncate">{restaurant.name}</h3>
+        <p className="text-gray-600 text-sm line-clamp-3">{restaurant.description}</p>
+        <p className="text-sm text-gray-500 mt-auto">
           ⭐ Rating: {restaurant.rating}
         </p>
       </div>

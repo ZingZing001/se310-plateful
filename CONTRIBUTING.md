@@ -142,7 +142,25 @@ All issues are encouraged to follow a consistent naming pattern:
 **Backend**
 
 1. cd backend
-2. Build and run with Maven or your IDE (Java 17+).
+2. Set up your .env file
+   ```bash
+   cp .env.example .env
+   ```
+
+- Open .env and add your MongoDB Atlas connection string
+  **Note:** Do not commit .env. This file contains secrets and is ignored by git. .env.example is there to show you the format.
+
+3. Run the backend (Spring Boot)
+   ```bash
+   mvn spring-boot:run
+   ```
+4. The backend will start on http://localhost:8080. You should see logs that say Started BackendApplication and confirm MongoDB connection.
+
+**Note:**
+
+- You need Java 17 and Maven installed.
+- If the app fails with MONGODB_URI not set, check that your .env file exists and contains valid credentials.
+- For Windows PowerShell, you may need to reload your terminal after creating .env.
 
 ---
 

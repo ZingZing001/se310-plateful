@@ -13,7 +13,27 @@ export default function Home() {
   const [mapLongitude, setMapLongitude] = useState(174.763336);
   const [mapLatitude, setMapLatitude] = useState(-36.848461);
   const [mapZoom, setMapZoom] = useState(13);
-  const [map, setMap] = useState({});
+  const [map, setMap] = useState(null);
+
+  const [restaurantsRaw, setRestaurantsRaw] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState("");
+
+  const MAX_ZOOM = 18;
+
+  // Fetch real restaurants from MongoDB
+  useEffect(() => {
+    setLoading(true);
+    setErr("");
+    fetch("http://localhost:8080/api/restaurants")
+      .then((res) => {
+        if (!res.ok) throw new Error(`API ${res.status}`);
+        return res.json();
+      })
+      .then((data) => setRestaurantsRaw(Array.isArray(data) ? data : []))
+      .catch((e) => setErr(e.message || "Failed to load restaurants"))
+      .finally(() => setLoading(false));
+  }, []);
 
   const increaseZoom = () => {
     if (mapZoom < MAX_ZOOM) {
@@ -43,6 +63,27 @@ export default function Home() {
     return () => map.remove();
   }, []);
 
+  // Map fetched data into card shape
+  const toCard = (r) => ({
+    name: r.name,
+    description: r.description,
+    rating: 5, // TODO: hardcoded for testing, should change later
+    image:
+      (Array.isArray(r.images) && r.images[0]) ||
+      "https://picsum.photos/seed/placeholder/600/400",
+  });
+
+  // filter popular
+  const popularDocs = restaurantsRaw.filter(
+    (r) => Array.isArray(r.tags) && r.tags.includes("popular")
+  );
+  // filter local favourite
+  const localFavDocs = restaurantsRaw.slice(0, 5);
+
+  const popularCards = (popularDocs.length ? popularDocs : restaurantsRaw.slice(0, 6)).map(toCard);
+  const localFavCards = localFavDocs.map(toCard);
+
+
   const cuisines = [
     { name: "Chinese", image: navLogo }, // TO DO - replace with actual images
     { name: "Japanese", image: navLogo },
@@ -50,46 +91,6 @@ export default function Home() {
     { name: "Mexican", image: navLogo },
     { name: "Indian", image: navLogo },
     { name: "Thai", image: navLogo },
-  ];
-
-  // Sample restaurant data
-  // TO DO - replace with actual data from API or database
-  const restaurants = [
-    {
-      name: "Sushi World",
-      description: "Fresh sushi rolls and sashimi prepared daily.",
-      rating: 4.7,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Pasta Palace",
-      description: "Authentic Italian pasta with homemade sauces.",
-      rating: 4.5,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Burger Haven",
-      description: "Juicy burgers with all the fixings you can imagine.",
-      rating: 4.3,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Taco Fiesta",
-      description: "Mexican street-style tacos with bold flavors.",
-      rating: 4.6,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
-    {
-      name: "Curry House",
-      description: "Spicy and savory curries inspired by India.",
-      rating: 4.4,
-      image:
-        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=",
-    },
   ];
 
   return (
@@ -109,7 +110,7 @@ export default function Home() {
 
       <section className="restaurant-section">
         <h3>Popular Restaurants</h3>
-        <RestaurantList restaurants={restaurants} />
+        <RestaurantList restaurants={popularCards} />
       </section>
 
       <section className="cuisine-section">
@@ -130,7 +131,7 @@ export default function Home() {
 
       <section className="restaurant-section">
         <h3>Local Favourites</h3>
-        <RestaurantList restaurants={restaurants} />
+        <RestaurantList restaurants={localFavCards} />
       </section>
 
       <section className="map-section">
