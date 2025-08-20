@@ -18,6 +18,7 @@ export default function Home() {
   const [map, setMap] = useState(null);
 
   const [restaurantsRaw, setRestaurantsRaw] = useState([]);
+  const [cuisines, setCuisines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,13 +29,32 @@ export default function Home() {
   useEffect(() => {
     setLoading(true);
     setErr("");
-    fetch("http://localhost:8080/api/restaurants")
+    
+    // Fetch restaurants
+    const fetchRestaurants = fetch("http://localhost:8080/api/restaurants")
       .then((res) => {
         if (!res.ok) throw new Error(`API ${res.status}`);
         return res.json();
       })
-      .then((data) => setRestaurantsRaw(Array.isArray(data) ? data : []))
-      .catch((e) => setErr(e.message || "Failed to load restaurants"))
+      .then((data) => setRestaurantsRaw(Array.isArray(data) ? data : []));
+
+    // Fetch cuisines
+    const fetchCuisines = fetch("http://localhost:8080/api/restaurants/cuisines")
+      .then((res) => {
+        if (!res.ok) throw new Error(`Cuisines API ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        // Transform cuisine strings into objects with name and default image
+        const cuisineObjects = Array.isArray(data) ? data.map(cuisine => ({
+          name: cuisine,
+          image: navLogo // Using default image for now
+        })) : [];
+        setCuisines(cuisineObjects);
+      });
+
+    Promise.all([fetchRestaurants, fetchCuisines])
+      .catch((e) => setErr(e.message || "Failed to load data"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -112,15 +132,10 @@ export default function Home() {
   const popularCards = (popularDocs.length ? popularDocs : restaurantsRaw.slice(0, 6)).map(toCard);
   const localFavCards = localFavDocs.map(toCard);
 
-
-  const cuisines = [
-    { name: "Chinese", image: navLogo }, // TO DO - replace with actual images
-    { name: "Japanese", image: navLogo },
-    { name: "Italian", image: navLogo },
-    { name: "Mexican", image: navLogo },
-    { name: "Indian", image: navLogo },
-    { name: "Thai", image: navLogo },
-  ];
+  // Handle cuisine click to search for restaurants of that cuisine
+  const handleCuisineClick = (cuisineName) => {
+    navigate(`/search?query=${encodeURIComponent(cuisineName)}`);
+  };
 
   return (
     <div>
@@ -152,7 +167,12 @@ export default function Home() {
         <h3>Explore Cuisines</h3>
         <div className="cuisine-list">
           {cuisines.map((cuisine) => (
-            <div key={cuisine.name} className="cuisine-item">
+            <div 
+              key={cuisine.name} 
+              className="cuisine-item"
+              onClick={() => handleCuisineClick(cuisine.name)}
+              style={{ cursor: 'pointer' }}
+            >
               <img
                 src={cuisine.image}
                 alt={cuisine.name}
