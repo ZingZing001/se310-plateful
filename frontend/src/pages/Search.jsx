@@ -28,21 +28,23 @@ export default function Search() {
     try {
       setLoading(true);
       setError("");
-      
-      const url = query.trim() 
-        ? `http://localhost:8080/api/restaurants/search?query=${encodeURIComponent(query)}`
+
+      const url = query.trim()
+        ? `http://localhost:8080/api/restaurants/search?query=${encodeURIComponent(
+            query
+          )}`
         : `http://localhost:8080/api/restaurants`;
-      
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       setRestaurants(data);
     } catch (err) {
-      console.error('Fetch error:', err);
-      setError('Failed to fetch restaurants: ' + err.message);
+      console.error("Fetch error:", err);
+      setError("Failed to fetch restaurants: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -54,14 +56,14 @@ export default function Search() {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
 
   // Load initial data when component mounts or search params change
   useEffect(() => {
-    const queryFromUrl = searchParams.get('query');
+    const queryFromUrl = searchParams.get("query");
     if (queryFromUrl) {
       setSearchQuery(queryFromUrl);
       fetchRestaurants(queryFromUrl);
@@ -102,28 +104,30 @@ export default function Search() {
     if (!map || !restaurants.length) return;
 
     // Clear existing markers
-    const markers = document.querySelectorAll('.custom-marker');
-    markers.forEach(marker => marker.remove());
+    const markers = document.querySelectorAll(".custom-marker");
+    markers.forEach((marker) => marker.remove());
 
     restaurants.forEach((r) => {
       // Use location from MongoDB data
       const longitude = r.location?.coordinates?.[0] || r.longitude;
       const latitude = r.location?.coordinates?.[1] || r.latitude;
-      
+
       if (!longitude || !latitude) return;
 
       const element = document.createElement("div");
       element.className = "custom-marker";
-      
+
       // Use restaurant image if available, otherwise use a default
-      const imageUrl = r.images?.[0] || "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
+      const imageUrl =
+        r.images?.[0] ||
+        "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
       element.innerHTML = `<img src="${imageUrl}" style="width:30px;height:30px;border-radius:50%;" />`;
 
       const popup = new tt.Popup({ offset: 30 }).setHTML(
         `<h3>${r.name}</h3>
          <p>${r.description}</p>
          <p><strong>Cuisine:</strong> ${r.cuisine}</p>
-         <p><strong>Price Level:</strong> ${'$'.repeat(r.priceLevel || 1)}</p>`
+         <p><strong>Price Level:</strong> ${"$".repeat(r.priceLevel || 1)}</p>`
       );
 
       new tt.Marker({ element })
@@ -135,47 +139,62 @@ export default function Search() {
 
   return (
     <div>
-      <section className="search-wrapper">
+      <section className="relative w-full overflow-hidden h-[40vh]">
         <img
           src={backgroundImage}
           alt="Background"
-          className="background-image"
+          className="absolute top-0 left-0 w-full h-full object-cover z-0"
         />
-        <h1 className="search-title">Looking for something to eat?</h1>
-        <div className="search-bar">
-          <input 
-            type="text" 
-            placeholder="Search..." 
+        <h1 className="absolute inset-x-0 top-1/2 transform -translate-y-1/2 text-4xl text-center z-10">
+          Looking for something to eat?
+        </h1>
+        <div
+          className="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2
+                flex gap-2 bg-white/80 px-4 py-2 mt-4 rounded-[10px] w-[55%]"
+        >
+          <input
+            type="text"
+            placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={handleKeyPress}
             disabled={loading}
+            className="border-none p-2 outline-none w-full"
           />
-          <button onClick={handleSearch} disabled={loading}>
-            {loading ? 'Searching...' : 'Go'}
+          <button
+            className="border-none bg-[#333] text-white p-2 px-4 rounded-[5px] cursor-pointer relative ml-2"
+            onClick={handleSearch}
+            disabled={loading}
+          >
+            {loading ? "Searching..." : "Go"}
           </button>
         </div>
         {error && (
-          <div className="error-message" style={{color: 'red', textAlign: 'center', marginTop: '10px'}}>
+          <div className=" className=text-red-600 text-center mt-2.5">
             Error: {error}
           </div>
         )}
       </section>
 
-      <section className="results-container">
-        <div className="restaurant-list">
+      <section className="flex items-start gap-5 justify-center mx-auto mt-8">
+        <div className="flex-1 max-w-[55%] overflow-y-auto flex flex-col">
           {loading ? (
-            <div style={{textAlign: 'center', padding: '20px'}}>Loading restaurants...</div>
+            <div className="text-center p-5">Loading restaurants...</div>
           ) : restaurants.length > 0 ? (
             <RestaurantList restaurants={restaurants} direction={"vertical"} />
           ) : (
-            <div style={{textAlign: 'center', padding: '20px'}}>
-              {searchQuery ? 'No restaurants found for your search.' : 'No restaurants available.'}
+            <div className="text-center p-5">
+              {searchQuery
+                ? "No restaurants found for your search."
+                : "No restaurants available."}
             </div>
           )}
         </div>
-        <div className="map-container">
-          <div ref={mapElement} className="mapDiv">
+        <div className="flex-1 sticky h-[80vh] pr-[2vw] px-4 mt-8 mb-8">
+          <div
+            ref={mapElement}
+            className="w-full h-full rounded-lg overflow-hidden relative"
+          >
             <input
               type="text"
               name="longitude"
