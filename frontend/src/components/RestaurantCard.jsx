@@ -22,7 +22,7 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
     <div
       className={`restaurant-card ${
         direction === "vertical"
-          ? "w-165 h-40 flex flex-row rounded-lg shadow-lg bg-white overflow-hidden"
+          ? "max-w-[100%] h-40 flex flex-row rounded-lg shadow-lg bg-white overflow-hidden"
           : "w-64 h-80 flex flex-col rounded-lg shadow-lg bg-white overflow-hidden"
       }`}
       onClick={() => {
@@ -46,8 +46,7 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
         }}
       />
       {/* Content section with dynamic styles based on direction */}
-      {/* TO DO: change padding to tailwind class */}
-      <div className="flex flex-col p-3 flex-grow" style={{ padding: "1rem" }}>
+      <div className="flex flex-col p-3 flex-grow">
         <h3 className="text-lg font-bold truncate">
           {restaurant.name || "Unnamed Restaurant"}
         </h3>
