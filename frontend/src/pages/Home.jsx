@@ -27,7 +27,7 @@ export default function Home() {
   useEffect(() => {
     setLoading(true);
     setErr("");
-    
+
     // Fetch restaurants
     const fetchRestaurants = fetch("http://localhost:8080/api/restaurants")
       .then((res) => {
@@ -37,17 +37,21 @@ export default function Home() {
       .then((data) => setRestaurantsRaw(Array.isArray(data) ? data : []));
 
     // Fetch cuisines
-    const fetchCuisines = fetch("http://localhost:8080/api/restaurants/cuisines")
+    const fetchCuisines = fetch(
+      "http://localhost:8080/api/restaurants/cuisines"
+    )
       .then((res) => {
         if (!res.ok) throw new Error(`Cuisines API ${res.status}`);
         return res.json();
       })
       .then((data) => {
         // Transform cuisine strings into objects with name and default image
-        const cuisineObjects = Array.isArray(data) ? data.map(cuisine => ({
-          name: cuisine,
-          image: navLogo // Using default image for now
-        })) : [];
+        const cuisineObjects = Array.isArray(data)
+          ? data.map((cuisine) => ({
+              name: cuisine,
+              image: navLogo, // Using default image for now
+            }))
+          : [];
         setCuisines(cuisineObjects);
       });
 
@@ -116,8 +120,10 @@ export default function Home() {
 
   // Map fetched data into card shape
   const toCard = (r) => ({
+    id: r.id,
     name: r.name,
     description: r.description,
+    priceLevel: r.priceLevel,
     rating: 5, // TODO: hardcoded for testing, should change later
     image:
       (Array.isArray(r.images) && r.images[0]) ||
