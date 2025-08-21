@@ -198,8 +198,9 @@ export default function Search() {
         )}
       </section>
 
-      <section className="flex items-start gap-5 justify-center mx-auto mt-8 sticky">
-        <div className="flex-1 max-w-[55%] overflow-y-auto flex flex-col">
+      <section className="flex justify-center gap-5 mx-auto mt-8">
+        {/* Restaurant List */}
+        <div className="flex-1 max-w-[55%] overflow-y-auto flex flex-col pl-60">
           {loading ? (
             <div className="text-center p-5">Loading restaurants...</div>
           ) : restaurants.length > 0 ? (
@@ -212,7 +213,8 @@ export default function Search() {
             </div>
           )}
         </div>
-        <div className="flex-1 sticky h-[80vh] pr-[2vw] px-4 mt-8 mb-8">
+        {/* Map */}
+        <div className="flex-1 h-[80vh] sticky top-8 mt-8 mb-8 mx-8 pr-60">
           <div
             ref={mapElement}
             className="w-full h-full rounded-lg overflow-hidden relative"
