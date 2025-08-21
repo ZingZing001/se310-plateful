@@ -160,7 +160,7 @@ export default function Home() {
           Looking for something to eat?
         </h1>
         <div
-          className="absolute top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2
+          className="absolute top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2
                 flex gap-2 bg-white/80 px-4 py-2 mt-4 rounded-[10px] w-[55%]"
         >
           <input
