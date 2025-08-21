@@ -126,11 +126,7 @@ export default function RestaurantDetails() {
               ? restaurant.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-block bg-green-100 text-green-800 px-6 py-2.5 rounded-full text-sm font-medium border border-green-400 mb-2"
-                    style={{
-                      padding: "0.25rem 0.5rem", // TO DO: change to tailwind class
-                      marginBottom: "0.25rem",
-                    }}
+                    className="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-400 mb-2"
                   >
                     {tag}
                   </span>
@@ -140,13 +136,13 @@ export default function RestaurantDetails() {
 
           {/* Description */}
           <div className="mb-6">
-            <p className="text-gray-700 leading-relaxed max-w-2xl mx-auto mb-8">
+            <p className="text-gray-700 leading-relaxed max-w-2xl mb-4">
               {restaurant.description}
             </p>
           </div>
 
           {/* Contact info */}
-          <div className="mt-16">
+          <div className="mt-8">
             <h4 className="text-lg font-semibold mb-2">Contact Info</h4>
             <p>{restaurant.address.street}</p>
             <p>{restaurant.address.city}</p>
