@@ -178,7 +178,7 @@ export default function Home() {
       <div className="px-20">
         <section className="mt-20 pt-8">
           <h3 className="text-xl font-bold">Popular Restaurants</h3>
-          <RestaurantList restaurants={popularCards} />
+          <RestaurantList restaurants={popularCards} direction="horizontal" />
         </section>
 
         <section className="relative mt-20">
@@ -189,7 +189,7 @@ export default function Home() {
                 key={cuisine.name}
                 className="flex flex-col items-center text-center"
                 onClick={() => handleCuisineClick(cuisine.name)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               >
                 <img
                   src={cuisine.image}
@@ -204,7 +204,7 @@ export default function Home() {
 
         <section className="mt-20 pt-8">
           <h3 className="text-xl font-bold">Local Favourites</h3>
-          <RestaurantList restaurants={localFavCards} />
+          <RestaurantList restaurants={localFavCards} direction="horizontal" />
         </section>
       </div>
 

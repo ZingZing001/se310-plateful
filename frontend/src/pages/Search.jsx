@@ -198,7 +198,7 @@ export default function Search() {
         )}
       </section>
 
-      <section className="flex items-start gap-5 justify-center mx-auto mt-8">
+      <section className="flex items-start gap-5 justify-center mx-auto mt-8 sticky">
         <div className="flex-1 max-w-[55%] overflow-y-auto flex flex-col">
           {loading ? (
             <div className="text-center p-5">Loading restaurants...</div>
