@@ -2,12 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import navLogo from "../assets/navlogo.png";
+import MapContainer from "../components/MapContainer";
+import RestaurantMarkers from "../components/RestaurantMarkers";
 import RestaurantList from "../components/RestaurantList";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
-import tt from "@tomtom-international/web-sdk-maps";
 
 export default function Home() {
-  const mapElement = useRef(null);
   const navigate = useNavigate();
 
   const [mapLongitude, setMapLongitude] = useState(174.763336);
@@ -107,17 +107,6 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    let map = tt.map({
-      key: "agzx9wsQdqX7CENP7gN1KQWwEe7V9c37",
-      container: mapElement.current,
-      center: [mapLongitude, mapLatitude],
-      zoom: mapZoom,
-    });
-    setMap(map);
-    return () => map.remove();
-  }, []);
-
   // Map fetched data into card shape
   const toCard = (r) => ({
     id: r.id,
@@ -214,17 +203,16 @@ export default function Home() {
 
       {/* Map Section */}
       <section className="relative">
-        <div
-          ref={mapElement}
-          className="w-full h-[400px] rounded-lg overflow-hidden"
-        >
-          <input
-            type="text"
-            name="longitude"
-            value={mapLongitude}
-            onChange={(e) => setMapLongitude(e.target.value)}
-            className="absolute top-2 right-2 p-2 bg-white border border-gray-300 rounded-md"
-          />
+        <div className="w-full h-[400px] rounded-lg overflow-hidden">
+          <MapContainer
+            longitude={mapLongitude}
+            latitude={mapLatitude}
+            zoom={mapZoom}
+          >
+            {(map) => (
+              <RestaurantMarkers map={map} restaurants={restaurantsRaw} />
+            )}
+          </MapContainer>
         </div>
       </section>
     </div>
