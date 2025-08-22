@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 export default function RestaurantMarkers({ map, restaurants }) {
   const navigate = useNavigate();
 
-  // Delegated click handler for buttons inside popups
   useEffect(() => {
     if (!map) return;
 
     const container = map.getContainer();
+
+    // Handle click on restaurant title within popup
     const handleClick = (e) => {
       const button = e.target.closest("button[data-restaurant-id]");
       if (button && container.contains(button)) {
@@ -66,7 +67,7 @@ export default function RestaurantMarkers({ map, restaurants }) {
 
         const popup = new tt.Popup({ offset: 30 }).setHTML(popupHTML);
 
-        // Add styling to the popup close button on pop up open.
+        // Add styling to the popup close button manually after popup creation
         popup.on("open", () => {
           const closeBtn = popup
             .getElement()
@@ -83,6 +84,7 @@ export default function RestaurantMarkers({ map, restaurants }) {
           }
         });
 
+        // Create the marker and add it to the map
         const marker = new tt.Marker({ element: el })
           .setLngLat([lng, lat])
           .setPopup(popup)
