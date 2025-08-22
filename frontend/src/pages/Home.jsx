@@ -9,19 +9,11 @@ import "@tomtom-international/web-sdk-maps/dist/maps.css";
 
 export default function Home() {
   const navigate = useNavigate();
-
-  const [mapLongitude, setMapLongitude] = useState(174.763336);
-  const [mapLatitude, setMapLatitude] = useState(-36.848461);
-  const [mapZoom, setMapZoom] = useState(13);
-  const [map, setMap] = useState(null);
-
   const [restaurantsRaw, setRestaurantsRaw] = useState([]);
   const [cuisines, setCuisines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
-  const MAX_ZOOM = 18;
 
   // Fetch real restaurants from MongoDB
   useEffect(() => {
@@ -59,23 +51,6 @@ export default function Home() {
       .catch((e) => setErr(e.message || "Failed to load data"))
       .finally(() => setLoading(false));
   }, []);
-
-  const increaseZoom = () => {
-    if (mapZoom < MAX_ZOOM) {
-      setMapZoom(mapZoom + 1);
-    }
-  };
-
-  const decreaseZoom = () => {
-    if (mapZoom > 1) {
-      setMapZoom(mapZoom - 1);
-    }
-  };
-
-  const updateMap = () => {
-    map.setCenter([parseFloat(mapLongitude), parseFloat(mapLatitude)]);
-    map.setZoom(mapZoom);
-  };
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -204,11 +179,7 @@ export default function Home() {
       {/* Map Section */}
       <section className="relative">
         <div className="w-full h-[400px] rounded-lg overflow-hidden">
-          <MapContainer
-            longitude={mapLongitude}
-            latitude={mapLatitude}
-            zoom={mapZoom}
-          >
+          <MapContainer>
             {(map) => (
               <RestaurantMarkers map={map} restaurants={restaurantsRaw} />
             )}

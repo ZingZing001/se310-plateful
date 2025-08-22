@@ -10,18 +10,10 @@ import "@tomtom-international/web-sdk-maps/dist/maps.css";
 
 export default function Search() {
   const [searchParams] = useSearchParams();
-
-  const [mapLongitude, setMapLongitude] = useState(174.763336);
-  const [mapLatitude, setMapLatitude] = useState(-36.848461);
-  const [mapZoom, setMapZoom] = useState(13);
-  const [map, setMap] = useState(null);
-
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
-  const MAX_ZOOM = 18;
 
   // Function to fetch restaurants based on search query
   const fetchRestaurants = async (query = "") => {
@@ -81,23 +73,6 @@ export default function Search() {
     }
   }, [searchParams]);
 
-  const increaseZoom = () => {
-    if (mapZoom < MAX_ZOOM) {
-      setMapZoom(mapZoom + 1);
-    }
-  };
-
-  const decreaseZoom = () => {
-    if (mapZoom > 1) {
-      setMapZoom(mapZoom - 1);
-    }
-  };
-
-  const updateMap = () => {
-    map.setCenter([parseFloat(mapLongitude), parseFloat(mapLatitude)]);
-    map.setZoom(mapZoom);
-  };
-
   return (
     <div>
       <section className="relative w-full overflow-hidden h-[40vh]">
@@ -154,11 +129,7 @@ export default function Search() {
         </div>
         {/* Map */}
         <div className="flex-1 h-[80vh] sticky top-8 mt-8 mb-8 mx-8 pr-60">
-          <MapContainer
-            longitude={mapLongitude}
-            latitude={mapLatitude}
-            zoom={mapZoom}
-          >
+          <MapContainer>
             {(map) => <RestaurantMarkers map={map} restaurants={restaurants} />}
           </MapContainer>
         </div>
