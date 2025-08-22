@@ -46,7 +46,7 @@ export default function MapContainer({ children }) {
       <div ref={mapElement} className="w-full h-full" />
 
       {/* Zoom Controls */}
-      <div className="absolute top-2 right-2 flex flex-col space-y-2">
+      <div className="absolute top-5 right-5 flex flex-col space-y-2">
         <button
           onClick={increaseZoom}
           className="bg-white shadow p-2 rounded hover:bg-gray-100"
