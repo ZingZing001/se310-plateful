@@ -49,20 +49,39 @@ export default function RestaurantMarkers({ map, restaurants }) {
         const id = r.id ?? r._id; // handle Mongo-style IDs too
 
         const popupHTML = `
-          <h3 class="popup-title" style="margin:0; border:none !important;">
-            <button 
-              data-restaurant-id="${id}" 
-              style="background:none;border:none;color:#007bff;cursor:pointer;font-size:16px;text-decoration:underline;padding:0;"
-            >
-              ${r.name || "Restaurant"}
-            </button>
-          </h3>
-          <p>${r.description || "No description"}</p>
-          <p><strong>Cuisine:</strong> ${r.cuisine || "N/A"}</p>
-          <p><strong>Price:</strong> ${priceDisplay}</p>
+          <div style="padding:5px;">
+            <h3 class="popup-title" style="margin:0; border:none !important;">
+                <button 
+                data-restaurant-id="${id}" 
+                style="background:none;border:none;color:#007bff;cursor:pointer;font-size:16px;text-decoration:underline;padding:0;"
+                >
+                ${r.name || "Restaurant"}
+                </button>
+            </h3>
+            <p>${r.description || "No description"}</p>
+            <p><strong>Cuisine:</strong> ${r.cuisine || "N/A"}</p>
+            <p><strong>Price:</strong> ${priceDisplay}</p>
+          </div>
         `;
 
         const popup = new tt.Popup({ offset: 30 }).setHTML(popupHTML);
+
+        // Add styling to the popup close button on pop up open.
+        popup.on("open", () => {
+          const closeBtn = popup
+            .getElement()
+            .querySelector(".mapboxgl-popup-close-button");
+          if (closeBtn) {
+            closeBtn.style.width = "30px";
+            closeBtn.style.height = "30px";
+            closeBtn.style.fontSize = "20px";
+            closeBtn.style.lineHeight = "30px";
+
+            // Move it closer to the content
+            closeBtn.style.top = "5px";
+            closeBtn.style.right = "5px";
+          }
+        });
 
         const marker = new tt.Marker({ element: el })
           .setLngLat([lng, lat])
