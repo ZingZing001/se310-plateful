@@ -2,26 +2,18 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import navLogo from "../assets/navlogo.png";
+import MapContainer from "../components/MapContainer";
+import RestaurantMarkers from "../components/RestaurantMarkers";
 import RestaurantList from "../components/RestaurantList";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
-import tt from "@tomtom-international/web-sdk-maps";
 
 export default function Home() {
-  const mapElement = useRef(null);
   const navigate = useNavigate();
-
-  const [mapLongitude, setMapLongitude] = useState(174.763336);
-  const [mapLatitude, setMapLatitude] = useState(-36.848461);
-  const [mapZoom, setMapZoom] = useState(13);
-  const [map, setMap] = useState(null);
-
   const [restaurantsRaw, setRestaurantsRaw] = useState([]);
   const [cuisines, setCuisines] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
-  const MAX_ZOOM = 18;
 
   // Fetch real restaurants from MongoDB
   useEffect(() => {
@@ -60,23 +52,6 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  const increaseZoom = () => {
-    if (mapZoom < MAX_ZOOM) {
-      setMapZoom(mapZoom + 1);
-    }
-  };
-
-  const decreaseZoom = () => {
-    if (mapZoom > 1) {
-      setMapZoom(mapZoom - 1);
-    }
-  };
-
-  const updateMap = () => {
-    map.setCenter([parseFloat(mapLongitude), parseFloat(mapLatitude)]);
-    map.setZoom(mapZoom);
-  };
-
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
       return;
@@ -106,17 +81,6 @@ export default function Home() {
       handleSearch();
     }
   };
-
-  useEffect(() => {
-    let map = tt.map({
-      key: "agzx9wsQdqX7CENP7gN1KQWwEe7V9c37",
-      container: mapElement.current,
-      center: [mapLongitude, mapLatitude],
-      zoom: mapZoom,
-    });
-    setMap(map);
-    return () => map.remove();
-  }, []);
 
   // Map fetched data into card shape
   const toCard = (r) => ({
@@ -214,17 +178,12 @@ export default function Home() {
 
       {/* Map Section */}
       <section className="relative">
-        <div
-          ref={mapElement}
-          className="w-full h-[400px] rounded-lg overflow-hidden"
-        >
-          <input
-            type="text"
-            name="longitude"
-            value={mapLongitude}
-            onChange={(e) => setMapLongitude(e.target.value)}
-            className="absolute top-2 right-2 p-2 bg-white border border-gray-300 rounded-md"
-          />
+        <div className="w-full h-[400px] rounded-lg overflow-hidden">
+          <MapContainer>
+            {(map) => (
+              <RestaurantMarkers map={map} restaurants={restaurantsRaw} />
+            )}
+          </MapContainer>
         </div>
       </section>
     </div>
