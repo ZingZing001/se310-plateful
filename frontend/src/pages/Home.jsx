@@ -165,7 +165,7 @@ export default function Home() {
           </div>
 
           {/* Filters*/}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             <Dropdown
               label="Cuisine"
               options={cuisines.map((c) => c.name)}
