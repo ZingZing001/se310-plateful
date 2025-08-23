@@ -15,18 +15,45 @@ export default function Search() {
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Function to fetch restaurants based on search query
-  const fetchRestaurants = async (query = "") => {
+  // Function to fetch restaurants based on search query and filters
+  const fetchRestaurants = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const url = query.trim()
-        ? `http://localhost:8080/api/restaurants/search?query=${encodeURIComponent(
-            query
-          )}`
-        : `http://localhost:8080/api/restaurants`;
-      console.log("Fetching from URL:", url); // Debug log
+      // Extract filters from URL
+      const query = searchParams.get("query");
+      const cuisine = searchParams.get("cuisine");
+      const priceMin = searchParams.get("priceMin");
+      const priceMax = searchParams.get("priceMax");
+      const reservation = searchParams.get("reservation");
+      const openNow = searchParams.get("openNow");
+      const city = searchParams.get("city");
+
+      const params = new URLSearchParams();
+      if (query) {
+        setSearchQuery(query);
+        params.append("query", query);
+      }
+      if (cuisine) params.append("cuisine", cuisine);
+      if (priceMin) params.append("priceMin", priceMin);
+      if (priceMax) params.append("priceMax", priceMax);
+      if (reservation !== null) params.append("reservation", reservation);
+      if (openNow !== null) params.append("openNow", openNow);
+      if (city) params.append("city", city);
+
+      const url = `http://localhost:8080/api/restaurants/filter?${params.toString()}`;
+      console.log("Fetching from URL:", url);
+      console.log("Applied filters:", {
+        query,
+        cuisine,
+        priceMin,
+        priceMax,
+        reservation,
+        openNow,
+        city,
+      });
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -39,8 +66,8 @@ export default function Search() {
       const restaurantArray = Array.isArray(data) ? data : [];
       setRestaurants(restaurantArray);
 
-      if (restaurantArray.length === 0 && query) {
-        console.log("No restaurants found for query:", query);
+      if (restaurantArray.length === 0) {
+        console.log("No restaurants found.");
       }
     } catch (err) {
       console.error("Fetch error:", err);
