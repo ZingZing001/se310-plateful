@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import navLogo from "../assets/navlogo.png";
 import MapContainer from "../components/MapContainer";
+import PriceSlider from "../components/Slider";
+import Dropdown from "../components/Dropdown";
 import RestaurantMarkers from "../components/RestaurantMarkers";
 import RestaurantList from "../components/RestaurantList";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
@@ -15,6 +17,14 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSlider, setShowSlider] = useState(false);
+  const [priceRange, setPriceRange] = useState([1, 5]);
+  const [priceMin, setPriceMin] = useState(null);
+  const [priceMax, setPriceMax] = useState(null);
+  const [selectedCuisine, setSelectedCuisine] = useState(null);
+  const [reservation, setReservation] = useState(null);
+  const [openNow, setOpenNow] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
 
   // Fetch real restaurants from MongoDB
   useEffect(() => {
@@ -54,24 +64,27 @@ export default function Home() {
   }, []);
 
   const handleSearch = async () => {
-    if (!searchQuery.trim()) {
-      return;
-    }
+    const params = new URLSearchParams();
+
+    if (searchQuery.trim()) params.append("query", searchQuery);
+    if (priceMin) params.append("priceMin", priceMin);
+    if (priceMax) params.append("priceMax", priceMax);
+    if (reservation !== null) params.append("reservation", reservation);
+    if (openNow !== null) params.append("openNow", openNow);
+    if (selectedCity) params.append("city", selectedCity);
+    if (selectedCuisine) params.append("cuisine", selectedCuisine);
 
     try {
-      // Perform the search and navigate to search page with results
       const response = await fetch(
-        `http://localhost:8080/api/restaurants/search?query=${encodeURIComponent(
-          searchQuery
-        )}`
+        `http://localhost:8080/api/restaurants/filter?${params.toString()}`
       );
-      if (response.ok) {
-        const searchResults = await response.json();
-        // Navigate to search page with query parameter
-        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-      } else {
-        console.error("Search failed:", response.status);
-      }
+      if (!response.ok) throw new Error("Failed to fetch");
+
+      const data = await response.json();
+
+      navigate(`/search?${params.toString()}`, {
+        state: { results: data },
+      });
     } catch (error) {
       console.error("Search error:", error);
     }
@@ -112,10 +125,15 @@ export default function Home() {
     navigate(`/search?query=${encodeURIComponent(cuisineName)}`);
   };
 
+  const boolOptions = [
+    { value: true, label: "Yes" },
+    { value: false, label: "No" },
+  ];
+
   return (
     <div>
       {/* Search Bar Section */}
-      <section className="relative w-full overflow-hidden h-[40vh]">
+      <section className="relative w-full h-[40vh]">
         <img
           src={backgroundImage}
           alt="Background"
@@ -125,20 +143,91 @@ export default function Home() {
           Looking for something to eat?
         </h1>
         <div
-          className="absolute top-[50%] left-1/2 transform -translate-x-1/2 -translate-y-1/2
-                flex gap-2 bg-white/80 px-4 py-2 mt-4 rounded-[10px] w-[55%]"
+          className="absolute top-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2
+    flex flex-col items-center gap-4 z-10 w-[60%]"
         >
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={handleKeyPress}
-            className="border-none p-2 outline-none w-full"
-          />
-          <button className="border-none bg-[#333] text-white p-2 px-4 rounded-[5px] cursor-pointer relative ml-2">
-            Go
-          </button>
+          {/* Search Bar */}
+          <div className="flex w-full bg-white/80 px-4 py-2 rounded-[10px]">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="border-none p-2 outline-none w-full"
+            />
+            <button
+              className="bg-[#333] text-white p-2 px-4 rounded-[5px] ml-2"
+              onClick={handleSearch}
+            >
+              Go
+            </button>
+          </div>
+
+          {/* Filters*/}
+          <div className="flex flex-wrap justify-center gap-2">
+            <Dropdown
+              label="Cuisine"
+              options={cuisines.map((c) => c.name)}
+              value={selectedCuisine}
+              onChange={setSelectedCuisine}
+              width="w-[150px]"
+            />
+            <div className="relative">
+              <button
+                className="bg-white text-sm px-2 py-1 rounded-md outline-none w-[120px]"
+                onClick={() => setShowSlider(!showSlider)}
+              >
+                Price: {"$".repeat(priceRange[0])}–{"$".repeat(priceRange[1])}
+              </button>
+
+              {showSlider && (
+                <div className="absolute top-full mt-2 z-50">
+                  <PriceSlider
+                    value={priceRange}
+                    onChange={setPriceRange}
+                    onApply={() => {
+                      setPriceMin(priceRange[0]);
+                      setPriceMax(priceRange[1]);
+                      setShowSlider(false);
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            <Dropdown
+              label="Reservation"
+              options={[
+                { value: "true", label: "Yes" },
+                { value: "false", label: "No" },
+              ]}
+              value={reservation !== null ? reservation.toString() : ""}
+              onChange={(val) =>
+                setReservation(val === "" ? null : val === "true")
+              }
+              width="w-[110px]"
+            />
+
+            <Dropdown
+              label="Open Now"
+              options={[
+                { value: "true", label: "Yes" },
+                { value: "false", label: "No" },
+              ]}
+              value={openNow !== null ? openNow.toString() : ""}
+              onChange={(val) => setOpenNow(val === "" ? null : val === "true")}
+              width="w-[105px]"
+            />
+
+            <Dropdown
+              label="City"
+              options={["Auckland", "Wellington", "Christchurch"]}
+              value={selectedCity}
+              onChange={setSelectedCity}
+              width="w-[120px]"
+            />
+          </div>
         </div>
       </section>
       <div className="px-20 mx-20">
