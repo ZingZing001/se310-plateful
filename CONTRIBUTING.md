@@ -198,6 +198,26 @@ Use a consistent, scannable title:
 
 ---
 
+## Adding Dependencies to the Project
+
+When introducing a new dependency, it is **your responsibility** to ensure it is added correctly so that other developers can install and use the project without issues.
+
+Before adding a dependency, consider whether it is truly necessary. Unnecessary dependencies can increase bundle size, slow down installs, and introduce security vulnerabilities. Always check if the functionality can be achieved with existing dependencies or native features.
+
+### Commands
+
+Use the following commands when adding dependencies:
+
+```bash
+# For dev-only dependencies (e.g., testing, linting, build tools)
+npm install <NEW_PACKAGE> --save-dev
+
+# For regular runtime dependencies (packages required in production)
+npm install <NEW_PACKAGE> --save
+```
+
+---
+
 ## Roadmap & Vision
 
 - A1 (current): Core restaurant search app with landing, search, details, about, and contact pages.
@@ -222,3 +242,7 @@ When you submit code changes, your submissions are understood to be under the sa
 [↑ Back to top](#table-of-contents)
 
 ---
+
+```
+
+```
