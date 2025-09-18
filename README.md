@@ -1,3 +1,5 @@
+This project is associated with the University of Auckland SOFTENG 310.
+
 <!-- Improved compatibility of back to top link: See: https://github.com/UOA-DCML/se310-plateful/pull/73 -->
 <a id="readme-top"></a>
 <!--
