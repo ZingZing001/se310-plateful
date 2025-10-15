@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { FaCar, FaWalking, FaBicycle, FaBus, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function DirectionsButton({
   destinationAddress,
@@ -105,35 +106,48 @@ export default function DirectionsButton({
     setMenuOpen(false);
   };
 
-  const travelModes = ["driving", "walking", "bicycling", "transit"];
+  const travelModes = [
+    { id: "driving", label: "Driving", icon: FaCar, color: "text-blue-600" },
+    { id: "walking", label: "Walking", icon: FaWalking, color: "text-green-600" },
+    { id: "bicycling", label: "Cycling", icon: FaBicycle, color: "text-orange-600" },
+    { id: "transit", label: "Transit", icon: FaBus, color: "text-purple-600" },
+  ];
+
+  const currentMode = travelModes.find((mode) => mode.id === travelMode);
+  const CurrentIcon = currentMode?.icon || FaCar;
 
   return (
     <>
       <div
-        className="relative inline-flex items-center space-x-1"
+        className="relative inline-block"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Main directions button */}
-        <button
-          type="button"
-          onClick={handleClick}
-          className={`bg-green-100 text-green-800 px-3 py-[6px] rounded-full text-[10px] font-medium border border-green-400 hover:shadow inline-flex items-center whitespace-nowrap ${className}`}
-        >
-          Get directions
-        </button>
-
-        {/* Mode dropdown button */}
+        {/* Unified directions button with mode selector */}
         <button
           ref={dropdownButtonRef}
           type="button"
           onClick={() => setMenuOpen((prev) => !prev)}
-          className="bg-blue-600 text-white px-3 py-[6px] rounded-full text-[10px] font-medium hover:bg-blue-700 inline-flex items-center whitespace-nowrap"
-          aria-label="Select travel mode"
+          className={`group relative inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 ${className}`}
+          aria-label="Get directions"
         >
-          <span>
-            {travelMode.charAt(0).toUpperCase() + travelMode.slice(1)}
+          {/* Icon for current travel mode */}
+          <CurrentIcon className="w-4 h-4" />
+          
+          {/* Button text */}
+          <span className="flex items-center gap-2">
+            <FaMapMarkerAlt className="w-3.5 h-3.5" />
+            Directions
           </span>
-          <span className="ml-1">▼</span>
+          
+          {/* Dropdown arrow */}
+          <svg 
+            className={`w-3 h-3 transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </button>
       </div>
 
@@ -142,25 +156,67 @@ export default function DirectionsButton({
         createPortal(
           <div
             ref={menuRef}
-            className="absolute bg-white border border-gray-300 rounded-lg shadow-lg z-[9999] w-28"
+            className="absolute bg-white border border-gray-200 rounded-xl shadow-2xl z-[9999] overflow-hidden"
             style={{
               position: "absolute",
               top: menuPosition.top,
               left: menuPosition.left,
+              minWidth: "200px",
             }}
           >
-            {travelModes.map((mode) => (
-              <button
-                key={mode}
-                onClick={() => handleModeChange(mode)}
-                className={`block w-full text-left px-3 py-1 text-[10px] ${
-                  mode === travelMode ? "bg-green-100" : "hover:bg-gray-100"
-                }`}
-                type="button"
-              >
-                {mode.charAt(0).toUpperCase() + mode.slice(1)}
-              </button>
-            ))}
+            {/* Dropdown header */}
+            <div className="px-4 py-2.5 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Travel Mode
+              </p>
+            </div>
+            
+            {/* Travel mode options */}
+            <div className="py-1">
+              {travelModes.map((mode) => {
+                const ModeIcon = mode.icon;
+                const isSelected = mode.id === travelMode;
+                
+                return (
+                  <button
+                    key={mode.id}
+                    onClick={() => {
+                      handleModeChange(mode.id);
+                      handleClick();
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 ${
+                      isSelected
+                        ? "bg-emerald-50 border-l-4 border-emerald-500"
+                        : "hover:bg-gray-50 border-l-4 border-transparent"
+                    }`}
+                    type="button"
+                  >
+                    {/* Mode icon */}
+                    <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${
+                      isSelected 
+                        ? "bg-emerald-100" 
+                        : "bg-gray-100 group-hover:bg-gray-200"
+                    }`}>
+                      <ModeIcon className={`w-4 h-4 ${isSelected ? "text-emerald-600" : mode.color}`} />
+                    </div>
+                    
+                    {/* Mode label */}
+                    <span className={`flex-1 text-left font-medium ${
+                      isSelected ? "text-emerald-700" : "text-gray-700"
+                    }`}>
+                      {mode.label}
+                    </span>
+                    
+                    {/* Check mark for selected mode */}
+                    {isSelected && (
+                      <svg className="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>,
           document.body
         )}

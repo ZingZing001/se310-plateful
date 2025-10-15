@@ -3,6 +3,7 @@ import DirectionsButton from "./DirectionsButton";
 import { useState } from "react";
 import ShareButton from "./ShareButton";
 import ShareModal from "./ShareModal";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaDollarSign } from "react-icons/fa";
 
 const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
   const navigate = useNavigate();
@@ -14,15 +15,36 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
     restaurant.image ||
     "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
 
-  // Handle rating - use rating if available, otherwise show cuisine and price level
-  const displayInfo = restaurant.rating
-    ? `⭐ Rating: ${restaurant.rating}`
-    : `${restaurant.cuisine || "Restaurant"} • ${"$".repeat(
-      Math.max(1, Math.min(4, restaurant.priceLevel || 1))
-    )}`;
-
   // Share URL for this restaurant
   const shareUrl = `${window.location.origin}/restaurant/${restaurant.id}`;
+
+  // Helper function to render star rating
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(<FaStar key={i} className="w-3 h-3 text-yellow-400" />);
+      } else if (i === fullStars && hasHalfStar) {
+        stars.push(<FaStarHalfAlt key={i} className="w-3 h-3 text-yellow-400" />);
+      } else {
+        stars.push(<FaRegStar key={i} className="w-3 h-3 text-gray-300" />);
+      }
+    }
+    return stars;
+  };
+
+  // Helper function to get rating badge color
+  const getRatingColor = (rating) => {
+    if (!rating) return "bg-gray-100 text-gray-600 border-gray-300";
+    if (rating >= 4.5) return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    if (rating >= 4.0) return "bg-green-50 text-green-700 border-green-200";
+    if (rating >= 3.5) return "bg-yellow-50 text-yellow-700 border-yellow-200";
+    if (rating >= 3.0) return "bg-orange-50 text-orange-700 border-orange-200";
+    return "bg-red-50 text-red-700 border-red-200";
+  };
 
   // Handle share button click
   const handleShare = async (e) => {
@@ -111,8 +133,42 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
             ) : (
               <p className="text-gray-600 text-sm">No tags available</p>
             )}
-            <p className="text-sm text-gray-500 mt-auto">{displayInfo}</p>
-            <div onClick={(e) => e.stopPropagation()}>
+            
+            {/* Rating and Price Level Display */}
+            <div className="flex items-center gap-2 mt-2">
+              {/* Rating Badge */}
+              {restaurant.rating ? (
+                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border ${getRatingColor(restaurant.rating)} font-semibold transition-all duration-200 hover:shadow-md`}>
+                  <div className="flex items-center gap-0.5">
+                    {renderStars(restaurant.rating)}
+                  </div>
+                  <span className="text-sm font-bold">{restaurant.rating.toFixed(1)}</span>
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border bg-gray-50 text-gray-500 border-gray-200">
+                  <FaRegStar className="w-3 h-3" />
+                  <span className="text-xs font-medium">No rating</span>
+                </div>
+              )}
+
+              {/* Price Level Badge */}
+              {restaurant.priceLevel && (
+                <div className="inline-flex items-center px-2 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
+                  {Array.from({ length: Math.max(1, Math.min(4, restaurant.priceLevel)) }).map((_, i) => (
+                    <FaDollarSign key={i} className="w-2.5 h-2.5" />
+                  ))}
+                </div>
+              )}
+
+              {/* Cuisine Badge (if no rating) */}
+              {!restaurant.rating && restaurant.cuisine && (
+                <div className="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700">
+                  <span className="text-xs font-medium">{restaurant.cuisine}</span>
+                </div>
+              )}
+            </div>
+
+            <div onClick={(e) => e.stopPropagation()} className="mt-2">
               <DirectionsButton
                 destinationAddress={
                   restaurant.address
