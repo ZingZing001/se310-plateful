@@ -23,7 +23,7 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
     const stars = [];
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
-    
+
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(<FaStar key={i} className="w-3 h-3 text-yellow-400" />);
@@ -133,7 +133,7 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
             ) : (
               <p className="text-gray-600 text-sm">No tags available</p>
             )}
-            
+
             {/* Rating and Price Level Display */}
             <div className="flex items-center gap-2 mt-2">
               {/* Rating Badge */}

@@ -46,9 +46,8 @@ export default function DirectionsButton({
     const destination = destinationLatLng
       ? `${destinationLatLng.lat},${destinationLatLng.lng}`
       : encodeURIComponent(destinationAddress || "");
-    const url = `https://www.google.com/maps/dir/?api=1${
-      origin ? `&origin=${origin}` : ""
-    }&destination=${destination}&travelmode=${travelMode}`;
+    const url = `https://www.google.com/maps/dir/?api=1${origin ? `&origin=${origin}` : ""
+      }&destination=${destination}&travelmode=${travelMode}`;
     window.open(url, "_blank");
   };
 
@@ -132,18 +131,18 @@ export default function DirectionsButton({
         >
           {/* Icon for current travel mode */}
           <CurrentIcon className="w-4 h-4" />
-          
+
           {/* Button text */}
           <span className="flex items-center gap-2">
             <FaMapMarkerAlt className="w-3.5 h-3.5" />
             Directions
           </span>
-          
+
           {/* Dropdown arrow */}
-          <svg 
+          <svg
             className={`w-3 h-3 transition-transform duration-200 ${menuOpen ? 'rotate-180' : ''}`}
-            fill="none" 
-            stroke="currentColor" 
+            fill="none"
+            stroke="currentColor"
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -170,13 +169,13 @@ export default function DirectionsButton({
                 Travel Mode
               </p>
             </div>
-            
+
             {/* Travel mode options */}
             <div className="py-1">
               {travelModes.map((mode) => {
                 const ModeIcon = mode.icon;
                 const isSelected = mode.id === travelMode;
-                
+
                 return (
                   <button
                     key={mode.id}
@@ -184,29 +183,26 @@ export default function DirectionsButton({
                       handleModeChange(mode.id);
                       handleClick();
                     }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 ${
-                      isSelected
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 ${isSelected
                         ? "bg-emerald-50 border-l-4 border-emerald-500"
                         : "hover:bg-gray-50 border-l-4 border-transparent"
-                    }`}
+                      }`}
                     type="button"
                   >
                     {/* Mode icon */}
-                    <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${
-                      isSelected 
-                        ? "bg-emerald-100" 
+                    <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isSelected
+                        ? "bg-emerald-100"
                         : "bg-gray-100 group-hover:bg-gray-200"
-                    }`}>
+                      }`}>
                       <ModeIcon className={`w-4 h-4 ${isSelected ? "text-emerald-600" : mode.color}`} />
                     </div>
-                    
+
                     {/* Mode label */}
-                    <span className={`flex-1 text-left font-medium ${
-                      isSelected ? "text-emerald-700" : "text-gray-700"
-                    }`}>
+                    <span className={`flex-1 text-left font-medium ${isSelected ? "text-emerald-700" : "text-gray-700"
+                      }`}>
                       {mode.label}
                     </span>
-                    
+
                     {/* Check mark for selected mode */}
                     {isSelected && (
                       <svg className="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
