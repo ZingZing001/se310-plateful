@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import DirectionsButton from "./DirectionsButton";
 import { useState } from "react";
 import ShareButton from "./ShareButton";
 import ShareModal from "./ShareModal";
@@ -112,6 +113,19 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
             )}
             <p className="text-sm text-gray-500 mt-auto">{displayInfo}</p>
           </div>
+        ) : (
+          <p className="text-gray-600 text-sm">No tags available</p>
+        )}
+        <p className="text-sm text-gray-500 mt-auto">{displayInfo}</p>
+        <div onClick={(e) => e.stopPropagation()}>
+          <DirectionsButton
+            destinationAddress={
+              restaurant.address
+                ? `${restaurant.address.street}, ${restaurant.address.city} ${restaurant.address.postcode}, ${restaurant.address.country}`
+                : restaurant.name
+            }
+            className="text-xs px-3 py-1"
+          />
         </div>
       </div>
 
