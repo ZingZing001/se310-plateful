@@ -30,7 +30,7 @@ export default function Search() {
 
   // Fetch cuisines
   useEffect(() => {
-  fetch(buildApiUrl("/api/restaurants/cuisines"))
+    fetch(buildApiUrl("/api/restaurants/cuisines"))
       .then((res) => res.json())
       .then((data) => {
         const cuisineObjects = Array.isArray(data)

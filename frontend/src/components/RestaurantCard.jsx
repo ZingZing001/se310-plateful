@@ -78,11 +78,10 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
       {/* Card container with dynamic styles based on direction (i.e. vertical in Home or horizontal in Search) */}
       <div className="relative">
         <div
-          className={`restaurant-card group transition-all duration-300 ${
-            direction === "vertical"
+          className={`restaurant-card group transition-all duration-300 ${direction === "vertical"
               ? "max-w-full h-[160px] flex flex-row rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
               : "w-[300px] min-h-[440px] flex flex-col rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
-          }`}
+            }`}
           onClick={() => {
             if (restaurant.id) {
               navigate(`/restaurant/${restaurant.id}`);

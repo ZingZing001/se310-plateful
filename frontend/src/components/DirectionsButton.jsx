@@ -184,15 +184,15 @@ export default function DirectionsButton({
                       handleClick();
                     }}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 cursor-pointer ${isSelected
-                        ? "bg-emerald-50 border-l-4 border-emerald-500"
-                        : "hover:bg-gray-50 border-l-4 border-transparent"
+                      ? "bg-emerald-50 border-l-4 border-emerald-500"
+                      : "hover:bg-gray-50 border-l-4 border-transparent"
                       }`}
                     type="button"
                   >
                     {/* Mode icon */}
                     <div className={`w-8 h-8 flex items-center justify-center rounded-lg ${isSelected
-                        ? "bg-emerald-100"
-                        : "bg-gray-100 group-hover:bg-gray-200"
+                      ? "bg-emerald-100"
+                      : "bg-gray-100 group-hover:bg-gray-200"
                       }`}>
                       <ModeIcon className={`w-4 h-4 ${isSelected ? "text-emerald-600" : mode.color}`} />
                     </div>

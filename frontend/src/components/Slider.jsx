@@ -92,11 +92,10 @@ export default function PriceSlider({ value, onChange, onApply }) {
           {priceLabels.map((item) => (
             <div
               key={item.value}
-              className={`py-2 px-1 rounded-lg transition-all duration-200 ${
-                value[0] <= item.value && value[1] >= item.value
+              className={`py-2 px-1 rounded-lg transition-all duration-200 ${value[0] <= item.value && value[1] >= item.value
                   ? "bg-emerald-100 text-emerald-700 font-semibold"
                   : "text-gray-400"
-              }`}
+                }`}
             >
               <div className="text-sm font-bold">{item.label}</div>
               <div className="text-[10px] mt-0.5">{item.desc}</div>

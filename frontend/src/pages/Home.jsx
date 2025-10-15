@@ -31,7 +31,7 @@ export default function Home() {
     setErr("");
 
     // Fetch restaurants
-  const fetchRestaurants = fetch(buildApiUrl("/api/restaurants"))
+    const fetchRestaurants = fetch(buildApiUrl("/api/restaurants"))
       .then((res) => {
         if (!res.ok) throw new Error(`API ${res.status}`);
         return res.json();
@@ -48,8 +48,8 @@ export default function Home() {
         // Transform cuisine strings into objects with name only
         const cuisineObjects = Array.isArray(data)
           ? data.map((cuisine) => ({
-              name: cuisine,
-            }))
+            name: cuisine,
+          }))
           : [];
         setCuisines(cuisineObjects);
       });
@@ -62,9 +62,9 @@ export default function Home() {
   const handleSearch = async () => {
     const params = new URLSearchParams();
 
-  if (searchQuery.trim()) params.append("query", searchQuery.trim());
-  if (priceMin !== null) params.append("priceMin", priceMin);
-  if (priceMax !== null) params.append("priceMax", priceMax);
+    if (searchQuery.trim()) params.append("query", searchQuery.trim());
+    if (priceMin !== null) params.append("priceMin", priceMin);
+    if (priceMax !== null) params.append("priceMax", priceMax);
     if (reservation !== null) params.append("reservation", reservation);
     if (openNow !== null) params.append("openNow", openNow);
     if (selectedCity) params.append("city", selectedCity);
@@ -132,7 +132,7 @@ export default function Home() {
           className="absolute inset-0 h-full w-full object-cover"
         />
         <h1 className="absolute inset-x-0 top-[30%] -translate-y-1/2 px-4 text-center text-2xl font-semibold text-black md:text-4xl">
-            Looking for something to eat?
+          Looking for something to eat?
         </h1>
         <div
           className="absolute top-[55%] left-1/2 w-[90%] max-w-5xl -translate-x-1/2 -translate-y-1/2
