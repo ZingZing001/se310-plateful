@@ -78,10 +78,11 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
       {/* Card container with dynamic styles based on direction (i.e. vertical in Home or horizontal in Search) */}
       <div className="relative">
         <div
-          className={`restaurant-card ${direction === "vertical"
-            ? "max-w-[100%] h-40 flex flex-row rounded-lg shadow-lg bg-white overflow-hidden"
-            : "w-44 h-80 flex flex-col rounded-lg shadow-lg bg-white overflow-hidden"
-            }`}
+          className={`restaurant-card group transition-all duration-300 ${
+            direction === "vertical"
+              ? "max-w-full h-[160px] flex flex-row rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
+              : "w-[300px] min-h-[440px] flex flex-col rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
+          }`}
           onClick={() => {
             if (restaurant.id) {
               navigate(`/restaurant/${restaurant.id}`);
@@ -89,94 +90,100 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
           }}
           style={{ cursor: "pointer" }}
         >
-          <img
-            src={imageUrl}
-            alt={restaurant.name || "Restaurant"}
-            className={
-              direction === "vertical"
-                ? "w-60 h-50 object-cover rounded-t-lg"
-                : "w-full h-48 object-cover rounded-t-lg"
-            }
-            onError={(e) => {
-              e.target.src =
-                "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
-            }}
-          />
-          {/* Content section with dynamic styles based on direction */}
-          <div className="flex flex-col p-3 flex-grow">
-            <div className="flex justify-between items-start gap-2">
-              <h3 className="text-lg font-bold truncate flex-1">
+          {/* Image Section */}
+          <div className={direction === "vertical" ? "w-[200px] flex-shrink-0 relative" : "w-full h-[180px] flex-shrink-0 relative"}>
+            <img
+              src={imageUrl}
+              alt={restaurant.name || "Restaurant"}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                e.target.src =
+                  "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
+              }}
+            />
+            {/* Share Button Overlay */}
+            <button
+              onClick={handleShare}
+              className="absolute top-2 right-2 p-2 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full transition-all duration-200 shadow-md hover:shadow-lg z-10 cursor-pointer"
+              aria-label="Share restaurant"
+            >
+              <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Content section with improved spacing */}
+          <div className={`flex flex-col flex-grow ${direction === "vertical" ? "p-4" : "p-5"}`}>
+            {/* Header Section */}
+            <div className={`space-y-2.5 ${direction === "vertical" ? "mb-2" : "mb-4"}`}>
+              <h3 className={`font-bold text-gray-900 leading-tight ${direction === "vertical" ? "text-base line-clamp-1" : "text-lg line-clamp-2"}`}>
                 {restaurant.name || "Unnamed Restaurant"}
               </h3>
-              {/* Share Button */}
-              <button
-                onClick={handleShare}
-                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0 cursor-pointer"
-                aria-label="Share restaurant"
-              >
-                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                </svg>
-              </button>
-            </div>
-            {Array.isArray(restaurant.tags) && restaurant.tags.length > 0 ? (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {restaurant.tags.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    className="bg-gray-200 text-gray-700 text-[10px] px-1.5 py-0.5 rounded-full inline-block"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-600 text-sm">No tags available</p>
-            )}
 
-            {/* Rating and Price Level Display */}
-            <div className="flex items-center gap-2 mt-2">
-              {/* Rating Badge */}
-              {restaurant.rating ? (
-                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border ${getRatingColor(restaurant.rating)} font-semibold transition-all duration-200 hover:shadow-md`}>
-                  <div className="flex items-center gap-0.5">
-                    {renderStars(restaurant.rating)}
-                  </div>
-                  <span className="text-sm font-bold">{restaurant.rating.toFixed(1)}</span>
-                </div>
-              ) : (
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border bg-gray-50 text-gray-500 border-gray-200">
-                  <FaRegStar className="w-3 h-3" />
-                  <span className="text-xs font-medium">No rating</span>
-                </div>
-              )}
-
-              {/* Price Level Badge */}
-              {restaurant.priceLevel && (
-                <div className="inline-flex items-center px-2 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
-                  {Array.from({ length: Math.max(1, Math.min(4, restaurant.priceLevel)) }).map((_, i) => (
-                    <FaDollarSign key={i} className="w-2.5 h-2.5" />
+              {/* Tags - Limited to 2-3 visible with dynamic handling */}
+              {Array.isArray(restaurant.tags) && restaurant.tags.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5">
+                  {restaurant.tags.slice(0, direction === "vertical" ? 2 : 3).map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-md font-medium whitespace-nowrap"
+                    >
+                      {tag}
+                    </span>
                   ))}
+                  {restaurant.tags.length > (direction === "vertical" ? 2 : 3) && (
+                    <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-md font-medium whitespace-nowrap">
+                      +{restaurant.tags.length - (direction === "vertical" ? 2 : 3)}
+                    </span>
+                  )}
                 </div>
-              )}
-
-              {/* Cuisine Badge (if no rating) */}
-              {!restaurant.rating && restaurant.cuisine && (
-                <div className="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700">
-                  <span className="text-xs font-medium">{restaurant.cuisine}</span>
-                </div>
-              )}
+              ) : null}
             </div>
 
-            <div onClick={(e) => e.stopPropagation()} className="mt-2">
-              <DirectionsButton
-                destinationAddress={
-                  restaurant.address
-                    ? `${restaurant.address.street}, ${restaurant.address.city} ${restaurant.address.postcode}, ${restaurant.address.country}`
-                    : restaurant.name
-                }
-                className="text-xs px-3 py-1"
-              />
+            {/* Spacer to push content to bottom - only for horizontal cards */}
+            {direction !== "vertical" && <div className="flex-grow min-h-[24px]" />}
+
+            {/* Bottom Section - Fixed spacing */}
+            <div className={direction === "vertical" ? "space-y-2" : "space-y-3.5"}>
+              {/* Rating and Price Section */}
+              <div className="flex items-center gap-2 flex-wrap">
+                {/* Rating Badge */}
+                {restaurant.rating ? (
+                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border ${getRatingColor(restaurant.rating)} font-semibold transition-all duration-200`}>
+                    <div className="flex items-center gap-0.5">
+                      {renderStars(restaurant.rating)}
+                    </div>
+                    <span className="text-sm font-bold">{restaurant.rating.toFixed(1)}</span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border bg-gray-50 text-gray-500 border-gray-200">
+                    <FaRegStar className="w-3 h-3" />
+                    <span className="text-xs font-medium">New</span>
+                  </div>
+                )}
+
+                {/* Price Level Badge */}
+                {restaurant.priceLevel && (
+                  <div className="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
+                    {Array.from({ length: Math.max(1, Math.min(4, restaurant.priceLevel)) }).map((_, i) => (
+                      <FaDollarSign key={i} className="w-2.5 h-2.5" />
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Directions Button - Always at bottom */}
+              <div onClick={(e) => e.stopPropagation()}>
+                <DirectionsButton
+                  destinationAddress={
+                    restaurant.address
+                      ? `${restaurant.address.street}, ${restaurant.address.city} ${restaurant.address.postcode}, ${restaurant.address.country}`
+                      : restaurant.name
+                  }
+                  className="w-full text-sm"
+                />
+              </div>
             </div>
           </div>
         </div>

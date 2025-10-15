@@ -126,7 +126,7 @@ export default function DirectionsButton({
           ref={dropdownButtonRef}
           type="button"
           onClick={() => setMenuOpen((prev) => !prev)}
-          className={`group relative inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 ${className}`}
+          className={`group relative inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer ${className}`}
           aria-label="Get directions"
         >
           {/* Icon for current travel mode */}
@@ -183,7 +183,7 @@ export default function DirectionsButton({
                       handleModeChange(mode.id);
                       handleClick();
                     }}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 ${isSelected
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 cursor-pointer ${isSelected
                         ? "bg-emerald-50 border-l-4 border-emerald-500"
                         : "hover:bg-gray-50 border-l-4 border-transparent"
                       }`}

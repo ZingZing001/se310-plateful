@@ -161,7 +161,7 @@ export default function Search() {
               </button>
 
               {showSlider && (
-                <div className="absolute left-0 right-0 top-full z-50 mt-2 max-w-xs sm:max-w-none">
+                <div className="absolute left-0 right-0 top-full z-[1050] mt-2 max-w-xs sm:max-w-none">
                   <PriceSlider
                     value={priceRange}
                     onChange={setPriceRange}
