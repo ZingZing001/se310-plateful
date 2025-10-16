@@ -5,6 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  base: '/se310-plateful/', // GitHub Pages uses repo name as base path
   test: {
     environment: "jsdom",
     setupFiles: "./vitest.setup.js",
