@@ -9,4 +9,4 @@ cmds = [
 ]
 
 [start]
-cmd = "cd backend && java -jar target/*.jar"
+cmd = "cd backend && java -Dserver.port=${PORT:-8080} -jar target/*.jar"
