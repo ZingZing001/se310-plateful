@@ -79,8 +79,8 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
       <div className="relative">
         <div
           className={`restaurant-card group transition-all duration-300 ${direction === "vertical"
-              ? "max-w-full h-[160px] flex flex-row rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
-              : "w-[300px] min-h-[440px] flex flex-col rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
+            ? "max-w-full h-[160px] flex flex-row rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
+            : "w-[300px] min-h-[440px] flex flex-col rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
             }`}
           onClick={() => {
             if (restaurant.id) {

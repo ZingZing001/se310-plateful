@@ -33,8 +33,8 @@ export default function PriceSlider({ value, onChange, onApply }) {
       className="w-full rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2.5 text-sm font-medium text-gray-700 outline-none border-2 border-emerald-200 hover:border-emerald-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-300 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
     >
       {priceOptions.map((option) => (
-        <option 
-          key={`${option.min}-${option.max}`} 
+        <option
+          key={`${option.min}-${option.max}`}
           value={`${option.min}-${option.max}`}
           className="bg-white text-gray-700"
         >
