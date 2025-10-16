@@ -165,28 +165,31 @@ export default function Home() {
               onChange={setSelectedCuisine}
               width="w-full sm:w-[150px]"
             />
-            <div className="relative">
-              <button
-                className="w-full rounded-md bg-white px-3 py-2 text-sm outline-none sm:w-[140px]"
-                onClick={() => setShowSlider(!showSlider)}
-              >
-                Price: {"$".repeat(priceRange[0])}–{"$".repeat(priceRange[1])}
-              </button>
-
-              {showSlider && (
-                <div className="absolute left-0 right-0 top-full z-[1050] mt-2 max-w-xs sm:max-w-none">
-                  <PriceSlider
-                    value={priceRange}
-                    onChange={setPriceRange}
-                    onApply={() => {
-                      setPriceMin(priceRange[0]);
-                      setPriceMax(priceRange[1]);
-                      setShowSlider(false);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+            <Dropdown
+              label="Price Range"
+              options={[
+                { value: "1-5", label: "Any Price" },
+                { value: "1-1", label: "$ - Budget" },
+                { value: "2-2", label: "$$ - Moderate" },
+                { value: "3-3", label: "$$$ - Pricey" },
+                { value: "4-4", label: "$$$$ - Upscale" },
+                { value: "5-5", label: "$$$$$ - Luxury" },
+                { value: "1-2", label: "$ to $$" },
+                { value: "1-3", label: "$ to $$$" },
+                { value: "2-3", label: "$$ to $$$" },
+                { value: "3-5", label: "$$$ to $$$$$" },
+              ]}
+              value={`${priceRange[0]}-${priceRange[1]}`}
+              onChange={(val) => {
+                if (val) {
+                  const [min, max] = val.split("-").map(Number);
+                  setPriceRange([min, max]);
+                  setPriceMin(min);
+                  setPriceMax(max);
+                }
+              }}
+              width="w-full sm:w-[180px]"
+            />
 
             <Dropdown
               label="Reservation"
@@ -224,7 +227,7 @@ export default function Home() {
       </section>
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-8 lg:px-20">
         {/* Popular Restaurants */}
-        <section className="mt-6 py-8">
+        <section className="relative mt-6 py-8 z-0">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-gray-900 sm:text-xl">
               Popular Restaurants
@@ -241,7 +244,7 @@ export default function Home() {
         </section>
 
         {/* Explore Cuisines */}
-        <section className="relative py-8">
+        <section className="relative py-8 z-0">
           <h3 className="text-lg font-bold text-gray-900 sm:text-xl">
             Explore Cuisines
           </h3>
@@ -262,7 +265,7 @@ export default function Home() {
         </section>
 
         {/* Local Favourites */}
-        <section className="py-8 mb-10">
+        <section className="relative py-8 mb-10 z-0">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-lg font-bold text-gray-900 sm:text-xl">
               Local Favourites
@@ -280,7 +283,7 @@ export default function Home() {
       </div>
 
       {/* Map Section */}
-      <section className="relative">
+      <section className="relative z-0">
         <div className="mx-auto w-full max-w-7xl overflow-hidden rounded-lg px-4 sm:px-8 lg:px-20">
           <div className="h-[280px] w-full rounded-lg sm:h-[340px] lg:h-[420px]">
             <MapContainer>

@@ -118,25 +118,22 @@ export default function DirectionsButton({
   return (
     <>
       <div
-        className="relative inline-block"
+        className="relative inline-flex gap-2"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Unified directions button with mode selector */}
+        {/* Mode selector button */}
         <button
           ref={dropdownButtonRef}
           type="button"
           onClick={() => setMenuOpen((prev) => !prev)}
-          className={`group relative inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer ${className}`}
-          aria-label="Get directions"
+          className={`group relative inline-flex items-center gap-2 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer ${className}`}
+          aria-label="Select travel mode"
         >
           {/* Icon for current travel mode */}
           <CurrentIcon className="w-4 h-4" />
 
-          {/* Button text */}
-          <span className="flex items-center gap-2">
-            <FaMapMarkerAlt className="w-3.5 h-3.5" />
-            Directions
-          </span>
+          {/* Mode name */}
+          <span className="font-medium">{currentMode?.label}</span>
 
           {/* Dropdown arrow */}
           <svg
@@ -147,6 +144,17 @@ export default function DirectionsButton({
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
+        </button>
+
+        {/* Get Directions button */}
+        <button
+          type="button"
+          onClick={handleClick}
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+          aria-label="Get directions"
+        >
+          <FaMapMarkerAlt className="w-3.5 h-3.5" />
+          Directions
         </button>
       </div>
 
@@ -179,10 +187,7 @@ export default function DirectionsButton({
                 return (
                   <button
                     key={mode.id}
-                    onClick={() => {
-                      handleModeChange(mode.id);
-                      handleClick();
-                    }}
+                    onClick={() => handleModeChange(mode.id)}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-all duration-150 cursor-pointer ${isSelected
                       ? "bg-emerald-50 border-l-4 border-emerald-500"
                       : "hover:bg-gray-50 border-l-4 border-transparent"

@@ -4,7 +4,6 @@ import backgroundImage from "../assets/PlatefulBackgroundHome copy.png";
 import RestaurantList from "../components/RestaurantList";
 import MapContainer from "../components/MapContainer";
 import Dropdown from "../components/Dropdown";
-import PriceSlider from "../components/Slider";
 import RestaurantMarkers from "../components/RestaurantMarkers";
 import { buildApiUrl } from "../lib/config";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
@@ -26,7 +25,6 @@ export default function Search() {
   const [reservation, setReservation] = useState(null);
   const [openNow, setOpenNow] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
-  const [showSlider, setShowSlider] = useState(false);
 
   // Fetch cuisines
   useEffect(() => {
@@ -152,28 +150,31 @@ export default function Search() {
               onChange={setSelectedCuisine}
               width="w-full sm:w-[150px]"
             />
-            <div className="relative">
-              <button
-                className="w-full rounded-md bg-white px-3 py-2 text-sm outline-none sm:w-[140px]"
-                onClick={() => setShowSlider(!showSlider)}
-              >
-                Price: {"$".repeat(priceRange[0])}–{"$".repeat(priceRange[1])}
-              </button>
-
-              {showSlider && (
-                <div className="absolute left-0 right-0 top-full z-[1050] mt-2 max-w-xs sm:max-w-none">
-                  <PriceSlider
-                    value={priceRange}
-                    onChange={setPriceRange}
-                    onApply={() => {
-                      setPriceMin(priceRange[0]);
-                      setPriceMax(priceRange[1]);
-                      setShowSlider(false);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
+            <Dropdown
+              label="Price Range"
+              options={[
+                { value: "1-5", label: "Any Price" },
+                { value: "1-1", label: "$ - Budget" },
+                { value: "2-2", label: "$$ - Moderate" },
+                { value: "3-3", label: "$$$ - Pricey" },
+                { value: "4-4", label: "$$$$ - Upscale" },
+                { value: "5-5", label: "$$$$$ - Luxury" },
+                { value: "1-2", label: "$ to $$" },
+                { value: "1-3", label: "$ to $$$" },
+                { value: "2-3", label: "$$ to $$$" },
+                { value: "3-5", label: "$$$ to $$$$$" },
+              ]}
+              value={`${priceRange[0]}-${priceRange[1]}`}
+              onChange={(val) => {
+                if (val) {
+                  const [min, max] = val.split("-").map(Number);
+                  setPriceRange([min, max]);
+                  setPriceMin(min);
+                  setPriceMax(max);
+                }
+              }}
+              width="w-full sm:w-[180px]"
+            />
 
             <Dropdown
               label="Reservation"

@@ -137,7 +137,9 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
                     </span>
                   )}
                 </div>
-              ) : null}
+              ) : (
+                <p className="text-gray-500 text-xs">No tags available</p>
+              )}
             </div>
 
             {/* Spacer to push content to bottom - only for horizontal cards */}
