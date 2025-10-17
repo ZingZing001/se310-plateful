@@ -51,9 +51,9 @@ const NavBar = () => {
   return (
     <nav className="sticky top-0 z-[1000] w-full border-b border-lime-50 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-[68px] w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-10">
-        <a href="/" className="block">
+        <Link to="/" className="block">
           <img src={navLogo} alt="Logo" className="h-9 sm:h-10" />
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-2 md:flex md:gap-4">{navLinks}</div>
 
