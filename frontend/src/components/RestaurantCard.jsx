@@ -4,10 +4,13 @@ import { useState } from "react";
 import ShareButton from "./ShareButton";
 import ShareModal from "./ShareModal";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaDollarSign } from "react-icons/fa";
+import { buildFrontendUrl } from "../lib/config";
+import { useTheme } from "../context/ThemeContext";
 
 const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
   const navigate = useNavigate();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const { isDark } = useTheme();
 
   // Handle the image - use first image from images array or fallback
   const imageUrl =
@@ -15,8 +18,8 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
     restaurant.image ||
     "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
 
-  // Share URL for this restaurant
-  const shareUrl = `${window.location.origin}${import.meta.env.BASE_URL}restaurant/${restaurant.id}`.replace(/\/\//g, '/');
+  // Share URL for this restaurant - use canonical frontend URL
+  const shareUrl = buildFrontendUrl(`/restaurant/${restaurant.id}`);
 
   // Helper function to render star rating
   const renderStars = (rating) => {
@@ -38,12 +41,46 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
 
   // Helper function to get rating badge color
   const getRatingColor = (rating) => {
-    if (!rating) return "bg-gray-100 text-gray-600 border-gray-300";
-    if (rating >= 4.5) return "bg-emerald-50 text-emerald-700 border-emerald-200";
-    if (rating >= 4.0) return "bg-green-50 text-green-700 border-green-200";
-    if (rating >= 3.5) return "bg-yellow-50 text-yellow-700 border-yellow-200";
-    if (rating >= 3.0) return "bg-orange-50 text-orange-700 border-orange-200";
-    return "bg-red-50 text-red-700 border-red-200";
+    if (!rating) {
+      return {
+        backgroundColor: isDark ? '#334155' : '#f3f4f6',
+        color: isDark ? '#d1d5db' : '#4b5563',
+        borderColor: isDark ? '#475569' : '#d1d5db'
+      };
+    }
+    if (rating >= 4.5) {
+      return {
+        backgroundColor: isDark ? '#064e3b' : '#ecfdf5',
+        color: isDark ? '#6ee7b7' : '#047857',
+        borderColor: isDark ? '#065f46' : '#a7f3d0'
+      };
+    }
+    if (rating >= 4.0) {
+      return {
+        backgroundColor: isDark ? '#14532d' : '#f0fdf4',
+        color: isDark ? '#86efac' : '#15803d',
+        borderColor: isDark ? '#166534' : '#bbf7d0'
+      };
+    }
+    if (rating >= 3.5) {
+      return {
+        backgroundColor: isDark ? '#713f12' : '#fefce8',
+        color: isDark ? '#fde047' : '#a16207',
+        borderColor: isDark ? '#854d0e' : '#fef08a'
+      };
+    }
+    if (rating >= 3.0) {
+      return {
+        backgroundColor: isDark ? '#7c2d12' : '#fff7ed',
+        color: isDark ? '#fdba74' : '#c2410c',
+        borderColor: isDark ? '#9a3412' : '#fed7aa'
+      };
+    }
+    return {
+      backgroundColor: isDark ? '#7f1d1d' : '#fef2f2',
+      color: isDark ? '#fca5a5' : '#b91c1c',
+      borderColor: isDark ? '#991b1b' : '#fecaca'
+    };
   };
 
   // Handle share button click
@@ -79,22 +116,22 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
       <div className="relative">
         <div
           className={`restaurant-card group transition-all duration-300 ${direction === "vertical"
-            ? "max-w-full h-[160px] flex flex-row rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
-            : "w-[300px] min-h-[440px] flex flex-col rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
+            ? "max-w-full min-h-[260px] flex flex-row items-stretch rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
+            : "w-[300px] flex flex-col rounded-xl shadow-md hover:shadow-xl bg-white overflow-hidden"
             }`}
+          style={{ backgroundColor: isDark ? '#1e293b' : 'white', cursor: 'pointer' }}
           onClick={() => {
             if (restaurant.id) {
               navigate(`/restaurant/${restaurant.id}`);
             }
           }}
-          style={{ cursor: "pointer" }}
         >
           {/* Image Section */}
-          <div className={direction === "vertical" ? "w-[200px] flex-shrink-0 relative" : "w-full h-[180px] flex-shrink-0 relative"}>
+          <div className={direction === "vertical" ? "w-[210px] max-w-[210px] flex-shrink-0 relative overflow-hidden" : "w-full h-[200px] flex-shrink-0 relative overflow-hidden"}>
             <img
               src={imageUrl}
               alt={restaurant.name || "Restaurant"}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${direction === "vertical" ? "min-h-[260px]" : ""}`}
               onError={(e) => {
                 e.target.src =
                   "https://media.istockphoto.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=0&k=20&c=9awLLRMBLeiYsrXrkgzkoscVU_3RoVwl_HA-OT-srjQ=";
@@ -113,10 +150,13 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
           </div>
 
           {/* Content section with improved spacing */}
-          <div className={`flex flex-col flex-grow ${direction === "vertical" ? "p-4" : "p-5"}`}>
+          <div className={`flex flex-col flex-grow ${direction === "vertical" ? "gap-3 p-4" : "gap-4 p-5 pb-6"}`}>
             {/* Header Section */}
             <div className={`space-y-2.5 ${direction === "vertical" ? "mb-2" : "mb-4"}`}>
-              <h3 className={`font-bold text-gray-900 leading-tight ${direction === "vertical" ? "text-base line-clamp-1" : "text-lg line-clamp-2"}`}>
+              <h3
+                className={`font-bold leading-tight ${direction === "vertical" ? "text-base line-clamp-1" : "text-lg line-clamp-2"}`}
+                style={{ color: isDark ? '#f1f5f9' : '#111827' }}
+              >
                 {restaurant.name || "Unnamed Restaurant"}
               </h3>
 
@@ -126,19 +166,29 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
                   {restaurant.tags.slice(0, direction === "vertical" ? 2 : 3).map((tag, idx) => (
                     <span
                       key={idx}
-                      className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-md font-medium whitespace-nowrap"
+                      className="text-xs px-2 py-1 rounded-md font-medium whitespace-nowrap"
+                      style={{
+                        backgroundColor: isDark ? '#334155' : '#f3f4f6',
+                        color: isDark ? '#d1d5db' : '#4b5563'
+                      }}
                     >
                       {tag}
                     </span>
                   ))}
                   {restaurant.tags.length > (direction === "vertical" ? 2 : 3) && (
-                    <span className="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded-md font-medium whitespace-nowrap">
+                    <span
+                      className="text-xs px-2 py-1 rounded-md font-medium whitespace-nowrap"
+                      style={{
+                        backgroundColor: isDark ? '#334155' : '#f3f4f6',
+                        color: isDark ? '#9ca3af' : '#6b7280'
+                      }}
+                    >
                       +{restaurant.tags.length - (direction === "vertical" ? 2 : 3)}
                     </span>
                   )}
                 </div>
               ) : (
-                <p className="text-gray-500 text-xs">No tags available</p>
+                <p className="text-xs" style={{ color: isDark ? '#9ca3af' : '#6b7280' }}>No tags available</p>
               )}
             </div>
 
@@ -146,19 +196,29 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
             {direction !== "vertical" && <div className="flex-grow min-h-[24px]" />}
 
             {/* Bottom Section - Fixed spacing */}
-            <div className={direction === "vertical" ? "space-y-2" : "space-y-3.5"}>
+            <div className={`mt-auto flex flex-col ${direction === "vertical" ? "gap-2" : "gap-3.5"}`}>
               {/* Rating and Price Section */}
               <div className="flex items-center gap-2 flex-wrap">
                 {/* Rating Badge */}
                 {restaurant.rating ? (
-                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border ${getRatingColor(restaurant.rating)} font-semibold transition-all duration-200`}>
+                  <div
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border font-semibold transition-all duration-200"
+                    style={getRatingColor(restaurant.rating)}
+                  >
                     <div className="flex items-center gap-0.5">
                       {renderStars(restaurant.rating)}
                     </div>
                     <span className="text-sm font-bold">{restaurant.rating.toFixed(1)}</span>
                   </div>
                 ) : (
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border bg-gray-50 text-gray-500 border-gray-200">
+                  <div
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border"
+                    style={{
+                      backgroundColor: isDark ? '#334155' : '#f9fafb',
+                      color: isDark ? '#9ca3af' : '#6b7280',
+                      borderColor: isDark ? '#475569' : '#e5e7eb'
+                    }}
+                  >
                     <FaRegStar className="w-3 h-3" />
                     <span className="text-xs font-medium">New</span>
                   </div>
@@ -166,7 +226,14 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
 
                 {/* Price Level Badge */}
                 {restaurant.priceLevel && (
-                  <div className="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
+                  <div
+                    className="inline-flex items-center px-2.5 py-1.5 rounded-lg border"
+                    style={{
+                      backgroundColor: isDark ? '#334155' : '#f8fafc',
+                      color: isDark ? '#cbd5e1' : '#334155',
+                      borderColor: isDark ? '#475569' : '#e2e8f0'
+                    }}
+                  >
                     {Array.from({ length: Math.max(1, Math.min(4, restaurant.priceLevel)) }).map((_, i) => (
                       <FaDollarSign key={i} className="w-2.5 h-2.5" />
                     ))}
@@ -183,6 +250,7 @@ const RestaurantCard = ({ restaurant, direction = "vertical" }) => {
                       : restaurant.name
                   }
                   className="w-full text-sm"
+                  stacked={direction === "vertical"}
                 />
               </div>
             </div>

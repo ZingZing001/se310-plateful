@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+/* Light mode default */
+body {
+  background-color: white;
+  color: black;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark mode — improved slate palette for reduced eye strain */
+html.dark body {
+  background-color: #0f172a;
+  /* slate-900 instead of pure black */
+  color: #f1f5f9;
+  /* slate-100 - softer white */
+}
